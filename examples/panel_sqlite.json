@@ -1,0 +1,14 @@
+{
+    "Web": {
+        "Type": "tcp or unix",
+        "Listen": "TCP_PORT or UNIX_PATH",
+        "Cert": "",
+        "Key": ""
+    },
+    "Database": {
+        "Type": "sqlite3",
+        "SQLite3": {
+            "File": "sqlite.db"
+        }
+    }
+}

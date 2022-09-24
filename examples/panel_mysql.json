@@ -1,0 +1,18 @@
+{
+    "Web": {
+        "Type": "tcp or unix",
+        "Listen": "TCP_PORT or UNIX_PATH",
+        "Cert": "",
+        "Key": ""
+    },
+    "Database": {
+        "Type": "mysql",
+        "MySQL": {
+            "Host": "127.0.0.1",
+            "Port": 3306,
+            "User": "root",
+            "Password": "",
+            "Name": "portforward"
+        }
+    }
+}
