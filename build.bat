@@ -15,7 +15,6 @@ if not exist .git (
     git remote add origin https://gitlab.com/%UserName%/%Name%.git
 )
 
-go get -u
 git add .gitignore .goreleaser.yml Dockerfile build.bat examples resources systemd scripts README.md LICENSE
 git commit -m "v%Version%"
 git push -u origin master
