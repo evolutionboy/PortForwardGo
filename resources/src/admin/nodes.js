@@ -186,7 +186,7 @@ $("#add_cancel").on("click", function () {
 
 function info_node(node) {
   var name = "";
-
+  $("#info_id").html(node.id);
   $("#info_name").html(node.name);
 
   $("#info_addr").html(node.addr);
