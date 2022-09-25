@@ -19,7 +19,7 @@ while [ $# -gt 0 ]; do
         shift
         ;;
     --secret)
-        api=$2
+        secret=$2
         shift
         ;;
     --license)
@@ -35,17 +35,17 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-if [ -z "${api}"]; then
+if [ -z "${api}" ]; then
     echo -e "${Font_Red}param 'api' not found${Font_Suffix}"
     exit 1
 fi
 
-if [ -z "${secret}"]; then
+if [ -z "${secret}" ]; then
     echo -e "${Font_Red}param 'secret' not found${Font_Suffix}"
     exit 1
 fi
 
-if [ -z "${license}"]; then
+if [ -z "${license}" ]; then
     echo -e "${Font_Red}param 'license' not found${Font_Suffix}"
     exit 1
 fi
