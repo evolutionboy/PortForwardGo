@@ -21,8 +21,8 @@ LimitSIGPENDING=infinity
 LimitMSGQUEUE=infinity
 LimitRPTRIO=infinity
 LimitRTTIME=infinity
-WorkingDirectory=/etc/PortForwardGoPanel/
-ExecStart=./PortForwardGoPanel --config config.json
+WorkingDirectory={dir}
+ExecStart={dir}/PortForwardGoPanel --config config.json
 
 [Install]
 WantedBy=multi-user.target

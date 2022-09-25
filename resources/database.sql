@@ -142,7 +142,7 @@ CREATE TABLE `rules` (
 
 CREATE TABLE `settings` (
   `id` int(11) NOT NULL,
-  `name` text NOT NULL,
+  `name` varchar(255) NOT NULL,
   `value` text NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
@@ -295,7 +295,9 @@ ADD
 ALTER TABLE
   `settings`
 ADD
-  PRIMARY KEY (`id`);
+  PRIMARY KEY (`id`),
+ADD
+  UNIQUE KEY `name` (`name`) USING BTREE;
 
 ALTER TABLE
   `traffic_statistics`

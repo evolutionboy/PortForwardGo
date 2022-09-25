@@ -22,7 +22,7 @@ LimitMSGQUEUE=infinity
 LimitRPTRIO=infinity
 LimitRTTIME=infinity
 WorkingDirectory={dir}
-ExecStart=./PortForwardGo --config backend.json --log run.log
+ExecStart={dir}/PortForwardGo --config backend.json --log run.log
 
 [Install]
 WantedBy=multi-user.target

@@ -22,7 +22,7 @@ LimitMSGQUEUE=infinity
 LimitRPTRIO=infinity
 LimitRTTIME=infinity
 WorkingDirectory={dir}
-ExecStart=./RClient --api {api} --id {id} --secret {secret}
+ExecStart={dir}/RClient --api {api} --id {id} --secret {secret}
 
 [Install]
 WantedBy=multi-user.target

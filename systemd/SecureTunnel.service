@@ -22,7 +22,7 @@ LimitMSGQUEUE=infinity
 LimitRPTRIO=infinity
 LimitRTTIME=infinity
 WorkingDirectory={dir}
-ExecStart=./SecureTunnel --api {api} --id {id} --secret {secret}
+ExecStart={dir}/SecureTunnel --api {api} --id {id} --secret {secret}
 
 [Install]
 WantedBy=multi-user.target
