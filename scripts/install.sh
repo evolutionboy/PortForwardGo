@@ -91,13 +91,13 @@ if [[ ! -e "/usr/bin/systemctl" ]] && [[ ! -e "/bin/systemctl" ]]; then
 fi
 
 dir="/opt/PortForwardGo"
-until [ -d "${dir}" ]; do
+while [ -d "${dir}" ]; do
     read -p "${dir} is exists, please input a new dir: " dir
 done
 mkdir -p ${dir}
 
 service_name="PortForwardGo"
-until [ -f "/etc/systemd/system/${service_name}.service" ]; do
+while [ -f "/etc/systemd/system/${service_name}.service" ]; do
     read -p "Service ${service_name} is exists, please input a new service name: " service_name
 done
 
