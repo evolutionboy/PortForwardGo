@@ -19,7 +19,10 @@ $.ajax({
             if (plan.id == 0) $("#info_name").html("定制套餐"); else $("#info_name").html(plan.name);
 
             if (user.reset_date == "0001-01-01") $("#info_resetdate").html("无"); else $("#info_resetdate").html(user.reset_date);
-            if (user.expire_date == "0001-01-01") $("#info_expiredate").html("无"); else $("#info_expiredate").html(user.expire_date);
+            if (user.expire_date == "0001-01-01") {
+                $("#info_expiredate").html("无");
+                $("#info_renew").attr("disabled", true);
+            } else $("#info_expiredate").html(user.expire_date);
 
             $("#info_autorenew").prop("checked", user.auto_renew);
 
@@ -41,6 +44,22 @@ $.ajax({
     .fail(function () {
         sendmsg("未能获取服务器数据, 请检查网络是否正常");
     });
+
+
+$("#info_renew").on("click", function () {
+    $.ajax({
+        method: "GET",
+        url: "/ajax/plan/renew",
+        dataType: "json",
+    })
+        .done(function (response) {
+            sendmsg(response.Msg);
+            if (response.Ok) setTimeout(3000, window.reload)
+        })
+        .fail(function () {
+            sendmsg("未能获取服务器数据, 请检查网络是否正常");
+        });
+});
 
 $("#info_autorenew").on("click", function () {
     var status = $("#info_autorenew").prop("checked");

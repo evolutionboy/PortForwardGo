@@ -148,7 +148,7 @@ function edit_plan(id) {
 
         mdui.mutation()
         mdui.updateTextFields()
-        
+
         edit.open();
       } else sendmsg(response.Msg);
     })
@@ -263,7 +263,7 @@ function load_plans() {
             <td>${plan.id}</td>
             <td>${plan.name}</td>
             <td>${plan.permission_id} | ${permissions[plan.permission_id].name}</td>
-            <td>${(plan.traffic / 1073741824).toFixed()}</td>`;
+            <td>${(plan.traffic / 1073741824).toFixed()} GB</td>`;
           if (plan.speed == 0) {
             html += `<td>无限制</td>`
           } else {
@@ -343,7 +343,8 @@ $("#search").keyup(function () {
       <td>${plan.id}</td>
       <td>${plan.name}</td>
       <td>${plan.permission_id} | ${permissions[plan.permission_id].name}</td>
-      <td>${(plan.traffic / 1073741824).toFixed()}</td>`;
+      <td>${(plan.traffic / 1073741824).toFixed()} GB</td>`;
+
     if (plan.speed == 0) {
       html += `<td>无限制</td>`
     } else {

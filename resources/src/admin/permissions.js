@@ -275,6 +275,8 @@ function load_nodes() {
 }
 
 function load_permissions() {
+  $("#permission_list").empty();
+
   permissions = [];
 
   search = $("#search").val();
