@@ -146,14 +146,6 @@ CREATE TABLE `settings` (
   `value` text NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-INSERT INTO
-  `settings` (`id`, `name`, `value`)
-VALUES
-  (1, 'license', ''),
-  (2, 'secure_key', ''),
-  (4, 'certificate', ''),
-  (5, 'certificate_key', '');
-
 CREATE TABLE `traffic_statistics` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -202,59 +194,6 @@ CREATE TABLE `users` (
   `last_active` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `registration_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
-
-INSERT INTO
-  `users` (
-    `id`,
-    `username`,
-    `name`,
-    `password`,
-    `plan_id`,
-    `permission_id`,
-    `reset_date`,
-    `expire_date`,
-    `auto_renew`,
-    `rule`,
-    `nat_rule`,
-    `traffic`,
-    `traffic_used`,
-    `speed`,
-    `maxconn`,
-    `balance`,
-    `price`,
-    `cycle`,
-    `permission`,
-    `api_token`,
-    `last_ip`,
-    `last_active`,
-    `registration_date`
-  )
-VALUES
-  (
-    NULL,
-    'admin',
-    'Admin',
-    MD5('admin'),
-    '0',
-    '0',
-    '0000-00-00',
-    '0000-00-00',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0',
-    '0.00',
-    '0.00',
-    '0',
-    '0',
-    '',
-    '',
-    '0000-00-00 00:00:00.000000',
-    CURRENT_TIMESTAMP
-  );
 
 ALTER TABLE
   `announcements`
@@ -382,5 +321,66 @@ ALTER TABLE
 MODIFY
   `id` int(11) NOT NULL AUTO_INCREMENT,
   AUTO_INCREMENT = 3;
+
+INSERT INTO
+  `users` (
+    `id`,
+    `username`,
+    `name`,
+    `password`,
+    `plan_id`,
+    `permission_id`,
+    `reset_date`,
+    `expire_date`,
+    `auto_renew`,
+    `rule`,
+    `nat_rule`,
+    `traffic`,
+    `traffic_used`,
+    `speed`,
+    `maxconn`,
+    `balance`,
+    `price`,
+    `cycle`,
+    `permission`,
+    `api_token`,
+    `last_ip`,
+    `last_active`,
+    `registration_date`
+  )
+VALUES
+  (
+    NULL,
+    'admin',
+    'Admin',
+    MD5('admin'),
+    '0',
+    '0',
+    '0000-00-00',
+    '0000-00-00',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0.00',
+    '0.00',
+    '0',
+    '0',
+    '',
+    '',
+    '0000-00-00 00:00:00.000000',
+    CURRENT_TIMESTAMP
+  );
+
+INSERT INTO
+  `settings` (`id`, `name`, `value`)
+VALUES
+  (NULL, 'license', ''),
+  (NULL, 'secure_key', ''),
+  (NULL, 'certificate', ''),
+  (NULL, 'certificate_key', '');
 
 COMMIT;
