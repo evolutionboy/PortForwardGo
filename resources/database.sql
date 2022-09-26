@@ -254,7 +254,8 @@ VALUES
     '',
     '0000-00-00 00:00:00.000000',
     CURRENT_TIMESTAMP
-  )
+  );
+
 ALTER TABLE
   `announcements`
 ADD
