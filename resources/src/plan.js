@@ -61,6 +61,23 @@ $("#info_renew").on("click", function () {
         });
 });
 
+
+$("#info_reset").on("click", function () {
+    $.ajax({
+        method: "GET",
+        url: "/ajax/plan/reset",
+        dataType: "json",
+    })
+        .done(function (response) {
+            sendmsg(response.Msg);
+            if (response.Ok) setTimeout(3000, window.reload)
+        })
+        .fail(function () {
+            sendmsg("未能获取服务器数据, 请检查网络是否正常");
+        });
+});
+
+
 $("#info_autorenew").on("click", function () {
     var status = $("#info_autorenew").prop("checked");
     $.ajax({
