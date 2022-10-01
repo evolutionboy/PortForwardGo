@@ -118,9 +118,11 @@ $("#start").on('click', function () {
     $("#result").attr("hidden", true)
     $("#mtr-table").attr("hidden", true)
     $("#iperf3-table").attr("hidden", true)
+    $("#iperf3-udp-table").attr("hidden", true)
     $("#result").empty()
     $("#mtr-table-body").empty()
     $("#iperf3-table-body").empty()
+    $("#iperf3-udp-table-body").empty()
 
     $("#progress").removeAttr("hidden")
 
@@ -290,7 +292,7 @@ function mtr(node_id, outbound, host) {
 }
 
 function iperf3(node_id, outbound, host, port, parallel, reverse, udp, ipv6) {
-    $("#iperf3-table").removeAttr("hidden")
+    if (udp) $("#iperf3-udp-table").removeAttr("hidden"); else $("#iperf3-table").removeAttr("hidden")
 
     url = window.location.href.replace("http", "ws") + "/iperf3?node=" + node_id + "&outbound=" + outbound + "&host=" + host + "&port=" + port + "&parallel=" + parallel + "&reverse=" + reverse + "&udp=" + udp + "&ipv6=" + ipv6
     var socket = new WebSocket(url);
@@ -300,31 +302,57 @@ function iperf3(node_id, outbound, host, port, parallel, reverse, udp, ipv6) {
         var response = JSON.parse(msg.data)
 
         if (!response.Ok) {
-            $("#iperf3-table-body").append('<tr><td colspan="7" class="text-center">错误: ' + response
-                .Data + '</td></tr>');
+            if (udp) {
+                $("#iperf3-udp-table-body").append('<tr><td colspan="7" class="text-center">错误: ' + response
+                    .Data + '</td></tr>');
+            } else {
+                $("#iperf3-table-body").append('<tr><td colspan="7" class="text-center">错误: ' + response
+                    .Data + '</td></tr>');
+            }
             finished();
             return;
         }
 
         if (response.Data.Id == "ID") {
             count += 1
-            if (count == 2) $("#iperf3-table-body").append(`<tr><td colspan="7"></td></tr>`);
+            if (count == 2) {
+                if (udp) {
+                    $("#iperf3-udp-table-body").append(`<tr><td colspan="7"></td></tr>`);
+                } else {
+                    $("#iperf3-table-body").append(`<tr><td colspan="7"></td></tr>`);
+                }
+            }
             return;
         }
-
-        if (response.Data.Id == "SUM" && response.Data.Tag == "") {
-            $("#iperf3-table-body").append(`<tr><td colspan="7"></td></tr>`);
-        }
-
-        $("#iperf3-table-body").append(`<tr>
+        if (udp) {
+            $("#iperf3-udp-table-body").append(`<tr>
+            <td>${response.Data.Id}</td>
+            <td>${response.Data.Interval}</td>
+            <td>${response.Data.Transfer}</td>
+            <td>${response.Data.Bitrate}</td>
+            <td>${response.Data.Jitter}</td>
+            <td>${response.Data.Datagrams}</td>
+            <td>${response.Data.Tag}</td>
+            </tr>`);
+        } else {
+            $("#iperf3-table-body").append(`<tr>
         <td>${response.Data.Id}</td>
         <td>${response.Data.Interval}</td>
         <td>${response.Data.Transfer}</td>
-        <td>${response.Data.Bandwidth}</td>
+        <td>${response.Data.Bitrate}</td>
         <td>${response.Data.Retr}</td>
         <td>${response.Data.Cwnd}</td>
         <td>${response.Data.Tag}</td>
         </tr>`);
+        }
+
+        if (response.Data.Id == "SUM" && response.Data.Tag == "") {
+            if (udp) {
+                $("#iperf3-udp-table-body").append(`<tr><td colspan="7"></td></tr>`);
+             } else {
+                $("#iperf3-table-body").append(`<tr><td colspan="7"></td></tr>`);
+            }
+        }
     }
 
     socket.onclose = () => {

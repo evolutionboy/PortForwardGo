@@ -62,12 +62,10 @@ $.ajax({
 
 function buy(id) {
     mdui.confirm("确认购买此套餐? 请确保账户内余额充足", "确认购买", function () {
-
         $.ajax({
             method: "POST",
             url: "/ajax/buy",
             dataType: "json",
-            contentType: "application/json",
             data: {
                 id: id,
             }

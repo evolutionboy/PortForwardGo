@@ -1,50 +1,7 @@
 var statusCard = new Vue({
     el: '#view',
     data: {
-        nodes: {
-            1:
-            {
-                name: "",
-                servers: [
-                    {
-                        SessionId: "",
-                        Host: {
-                            Platform: "",
-                            PlatformVersion: "",
-                            CPU: [],
-                            MemTotal: 0,
-                            DiskTotal: 0,
-                            SwapTotal: 0,
-                            Arch: "",
-                            Virtualization: "",
-                            BootTime: 0,
-                            IP: "",
-                            CountryCode: "",
-                            Version: ""
-                        },
-                        State: {
-                            CPU: 0,
-                            MemUsed: 0,
-                            SwapUsed: 0,
-                            DiskUsed: 0,
-                            NetInTransfer: 0,
-                            NetOutTransfer: 0,
-                            NetInSpeed: 0,
-                            NetOutSpeed: 0,
-                            Uptime: 0,
-                            Load1: 0,
-                            Load5: 0.01,
-                            Load15: 0,
-                            TcpConnCount: 0,
-                            UdpConnCount: 0,
-                            ProcessCount: 0
-                        },
-                        Active: 0,
-                        live: false,
-                    }
-                ]
-            }
-        },
+        nodes: {},
         is_admin: false,
     },
     methods: {
@@ -131,13 +88,17 @@ function connect(initial) {
             }
 
             if (statusCard.nodes[nodeid] == null) {
-                statusCard.nodes[node.id] = {
+                Vue.set(statusCard.nodes, node.id, {
                     name: "未知节点",
                     servers: [],
-                };
+                })
             }
 
             var servers = data.Nodes[nodeid];
+            if (statusCard.nodes[nodeid].servers.length == 0) {
+                Vue.set(statusCard.nodes[nodeid], servers, servers)
+            }
+
             statusCard.nodes[nodeid].servers = servers
 
             for (id in servers) {
@@ -148,7 +109,7 @@ function connect(initial) {
                     continue;
                 }
 
-                if (data.Now - server.Active > 10) {
+                if (data.Now - server.Active > 30) {
                     server.live = false
                     continue;
                 }
@@ -185,10 +146,10 @@ function load_nodes() {
                     var node = response.Data[i];
 
                     if (statusCard.nodes[node.id] == null) {
-                        statusCard.nodes[node.id] = {
+                        Vue.set(statusCard.nodes, node.id, {
                             name: node.name,
                             servers: [],
-                        };
+                        });
                     } else {
                         statusCard.nodes[node.id].name = node.name;
                     }

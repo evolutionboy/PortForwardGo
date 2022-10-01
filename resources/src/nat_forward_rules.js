@@ -771,7 +771,7 @@ function load_nodes() {
 
           switch (node.permission) {
             case 4:
-              $("#add_node").append(`<option value="${node.id}">${node.name}</option>`);
+              $("#add_node").append(`<option value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
               break;
           }
         }
@@ -975,6 +975,8 @@ function copy_rule(rule) {
 }
 
 function debug_rule(id) {
+  $("#debug_id").html(id);
+
   $("#debug_inbound").empty();
   $("#debug_outbound").empty();
 

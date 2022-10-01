@@ -543,6 +543,23 @@ function delete_node(id) {
   });
 }
 
+function update_node(id) {
+  mdui.confirm("确定升级后端吗?", "确认升级", function () {
+    $.ajax({
+      method: "GET",
+      url: "/ajax/admin/node/update?id=" + id,
+      dataType: "json",
+    })
+      .done(function (response) {
+          sendmsg(response.Msg)
+      })
+      .fail(function () {
+        sendmsg("请求失败, 请检查网络是否正常");
+      });
+  });
+}
+
+
 function copy_script(id, secret) {
   if (settings.license == "") {
     sendmsg("请先去设置填写授权码");
@@ -602,6 +619,9 @@ function load_nodes() {
           <span id="delete_${node.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '删除'}">
             <i class="mdui-icon material-icons">delete</i>
           </span>
+          <span id="update_${node.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '升级'}">
+            <i class="mdui-icon material-icons">update</i>
+          </span>
           <span id="copy_${node.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '复制对接命令'}">
             <i class="mdui-icon material-icons">content_copy</i>
           </span>
@@ -618,6 +638,10 @@ function load_nodes() {
 
           $(`#delete_${node.id}`).on("click", null, node.id, function (event) {
             delete_node(event.data);
+          });
+
+          $(`#update_${node.id}`).on("click", null, node.id, function (event) {
+            update_node(event.data);
           });
 
           $(`#copy_${node.id}`).on("click", null, { id: node.id, secret: node.secret }, function (event) {
@@ -703,6 +727,9 @@ $("#search").keyup(function () {
           <span id="delete_${node.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '删除'}">
             <i class="mdui-icon material-icons">delete</i>
           </span>
+          <span id="update_${node.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '升级'}">
+            <i class="mdui-icon material-icons">update</i>
+          </span>
           <span id="copy_${node.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '复制对接命令'}">
             <i class="mdui-icon material-icons">content_copy</i>
           </span>
@@ -719,6 +746,10 @@ $("#search").keyup(function () {
 
     $(`#delete_${node.id}`).on("click", null, node.id, function (event) {
       delete_node(event.data);
+    });
+
+    $(`#update_${node.id}`).on("click", null, node.id, function (event) {
+      update_node(event.data);
     });
 
     $(`#copy_${node.id}`).on("click", null, { id: node.id, secret: node.secret }, function (event) {

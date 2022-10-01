@@ -47,34 +47,38 @@ $.ajax({
 
 
 $("#info_renew").on("click", function () {
-    $.ajax({
-        method: "GET",
-        url: "/ajax/plan/renew",
-        dataType: "json",
-    })
-        .done(function (response) {
-            sendmsg(response.Msg);
-            if (response.Ok) setTimeout(3000, window.reload)
+    mdui.confirm("确认续费? 请确保账户内余额充足", "确认", function () {
+        $.ajax({
+            method: "GET",
+            url: "/ajax/plan/renew",
+            dataType: "json",
         })
-        .fail(function () {
-            sendmsg("未能获取服务器数据, 请检查网络是否正常");
-        });
+            .done(function (response) {
+                sendmsg(response.Msg);
+                if (response.Ok) setTimeout(3000, window.reload)
+            })
+            .fail(function () {
+                sendmsg("未能获取服务器数据, 请检查网络是否正常");
+            });
+    });
 });
 
 
 $("#info_reset").on("click", function () {
-    $.ajax({
-        method: "GET",
-        url: "/ajax/plan/reset",
-        dataType: "json",
-    })
-        .done(function (response) {
-            sendmsg(response.Msg);
-            if (response.Ok) setTimeout(3000, window.reload)
+    mdui.confirm("确认重置流量? 请确保账户内余额充足", "确认", function () {
+        $.ajax({
+            method: "GET",
+            url: "/ajax/plan/reset",
+            dataType: "json",
         })
-        .fail(function () {
-            sendmsg("未能获取服务器数据, 请检查网络是否正常");
-        });
+            .done(function (response) {
+                sendmsg(response.Msg);
+                if (response.Ok) setTimeout(3000, window.reload)
+            })
+            .fail(function () {
+                sendmsg("未能获取服务器数据, 请检查网络是否正常");
+            });
+    });
 });
 
 

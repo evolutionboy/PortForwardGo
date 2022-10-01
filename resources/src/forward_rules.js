@@ -251,10 +251,10 @@ $("#add_target").on("click", function () {
 
   var html = `
 <li target="${i}" class="mdui-list-item">
-  <div class="mdui-list-item mdui-textfield">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
       <input target="${i}" class="mdui-textfield-input" type="text" placeholder="127.0.0.1" />
   </div>
-  <div class="mdui-list-item mdui-textfield">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
       <input target="${i}" class="mdui-textfield-input" type="number" min="1" max="65535" placeholder="8080" />
   </div>
   <button target="${i}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
@@ -433,10 +433,10 @@ function edit_rule(id) {
           for (i in rule.targets) {
             var html = `
 <li target="${i}" class="mdui-list-item">
-  <div class="mdui-list-item mdui-textfield">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
       <input target="${i}" class="mdui-textfield-input" type="text" placeholder="127.0.0.1" />
   </div>
-  <div class="mdui-list-item mdui-textfield">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
       <input target="${i}" class="mdui-textfield-input" type="number" min="1" max="65535" placeholder="8080" />
   </div>
   <button target="${i}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
@@ -584,10 +584,10 @@ $("#edit_target").on("click", function () {
 
   var html = `
 <li target="${i}" class="mdui-list-item">
-  <div class="mdui-list-item mdui-textfield">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
       <input target="${i}" class="mdui-textfield-input" type="text" placeholder="127.0.0.1" />
   </div>
-  <div class="mdui-list-item mdui-textfield">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
       <input target="${i}" class="mdui-textfield-input" type="number" min="1" max="65535" placeholder="8080" />
   </div>
   <button target="${i}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
@@ -985,14 +985,14 @@ function load_nodes() {
 
           switch (node.permission) {
             case 1:
-              $("#add_node").append(`<option value="${node.id}">${node.name}</option>`);
+              $("#add_node").append(`<option value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
               break;
             case 2:
-              $("#add_dest").append(`<option data-type="node" value="${node.id}">${node.name}</option>`);
+              $("#add_dest").append(`<option data-type="node" value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
               break;
             case 3:
               $("#add_node").append(`<option value="${node.id}">${node.name}</option>`);
-              $("#add_dest").append(`<option data-type="node" value="${node.id}">${node.name}</option>`);
+              $("#add_dest").append(`<option data-type="node" value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
               break;
           }
         }
@@ -1197,10 +1197,10 @@ function copy_rule(rule) {
     for (i in rule.targets) {
       var html = `
 <li target="${i}" class="mdui-list-item">
-  <div class="mdui-list-item mdui-textfield">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
       <input target="${i}" class="mdui-textfield-input" type="text" placeholder="127.0.0.1" />
   </div>
-  <div class="mdui-list-item mdui-textfield">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
       <input target="${i}" class="mdui-textfield-input" type="number" min="1" max="65535" placeholder="8080" />
   </div>
   <button target="${i}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
@@ -1270,6 +1270,8 @@ function copy_rule(rule) {
 }
 
 function debug_rule(id) {
+  $("#debug_id").html(id);
+
   $("#debug_inbound").empty();
   $("#debug_outbound").empty();
 

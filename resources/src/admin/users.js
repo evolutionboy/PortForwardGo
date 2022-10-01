@@ -124,7 +124,7 @@ function info_user(user) {
   $("#info_name").html(user.name);
   $("#info_username").html(user.username);
   $("#info_token").html(user.token);
-  $("#info_last_ip").html(user.last_ip);
+  if (user.last_ip == null) $("#info_last_ip").html("");else $("#info_last_ip").html(user.last_ip);
   $("#info_last_active").html(user.last_active);
   $("#info_registration_date").html(user.registration_date);
 

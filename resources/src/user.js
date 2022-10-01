@@ -1,3 +1,5 @@
+var addBalance = new mdui.Dialog("#AddBalance");
+
 $.ajax({
     method: "GET",
     url: "/ajax/userInfo",
@@ -161,4 +163,40 @@ $("#changepw_enter").on('click', function () {
 
 $("#changepw_cancel").on('click', function () {
     changePassword.close();
+});
+
+
+$("#add_balance").on('click', function () {
+    $("#add_balance_sum").val('');
+    addBalance.open();
+});
+
+$("#addbalance_enter").on('click', function () {
+    var balance = $("#add_balance_sum").val();
+
+    if (!balance) {
+        sendmsg("请填完所有选项");
+        return;
+    }
+
+    $.ajax({
+        method: "PUT",
+        url: "/ajax/pay",
+        dataType: "json",
+        data: {
+            "money": balance,
+        },
+    })
+        .done(function (response) {
+            if (response.Ok) {
+                window.location.replace("/invoice/" + response.invoice_id);
+            } else sendmsg(response.Msg);
+        })
+        .fail(function () {
+            sendmsg("请求失败, 请检查网络是否正常");
+        });
+});
+
+$("#addbalance_cancel").on('click', function () {
+    addBalance.close();
 });

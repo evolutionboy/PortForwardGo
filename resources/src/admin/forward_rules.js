@@ -613,6 +613,7 @@ function stop_rule(id) {
 }
 
 function debug_rule(id) {
+  $("#debug_id").html(id);
   $("#debug_inbound").empty();
   $("#debug_outbound").empty();
 

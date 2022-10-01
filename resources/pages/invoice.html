@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/mdui/1.0.2/css/mdui.min.css" />
   <link rel="stylesheet" href="/src/global.css" />
   <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://apps.bdimg.com/libs/jquery-qrcode/1.0.0/jquery.qrcode.min.js"></script>
   <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/mdui/1.0.2/js/mdui.min.js"></script>
   <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/markdown.js/0.5.0/markdown.min.js"></script>
 </head>
@@ -105,7 +106,7 @@
 
       <div class="mdui-divider"></div>
 
-      <a href="/user" class="mdui-list-item  mdui-list-item-active">
+      <a href="/user" class="mdui-list-item">
         <i class="mdui-list-item-icon mdui-icon material-icons">account_circle</i>
         <div class="mdui-list-item-content">用户信息</div>
       </a>
@@ -144,156 +145,42 @@
   </div>
 
   <div id="view" class="mdui-container mdui-typo" style="display: none">
-    <div class="intro mdui-typo" style="height: auto !important;">
-      <ul class="mdui-list" mdui-collapse="{accordion: true}">
-        <li class="mdui-list-item">
-          <strong>用户ID</strong>
-          <div id="user_id" class="mdui-list-item mdui-textfield">
-          </div>
-        </li>
+    <h1 id="invoice_id">账单 #</h1>
 
-        <li class="mdui-list-item">
-          <strong>用户名</strong>
-          <div id="username" class="mdui-list-item mdui-textfield">
-          </div>
-        </li>
+    <h5 id="amount">金额 ￥</h5>
 
-        <li class="mdui-list-item">
-          <strong>昵称</strong>
-          <div id="name" class="mdui-list-item mdui-textfield">
-          </div>
-          <button id="change_name"
-            class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple"
-            mdui-tooltip="{content: '修改'}">
-            <i class="mdui-icon material-icons">edit</i>
-          </button>
-          <button id="submit_name"
-            class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple"
-            style="display: none;" mdui-tooltip="{content: '提交'}">
-            <i class="mdui-icon material-icons">check</i>
-          </button>
-          <button id="cancel_name"
-            class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple"
-            style="display: none;" mdui-tooltip="{content: '取消'}">
-            <i class="mdui-icon material-icons">close</i>
-          </button>
-        </li>
+    <h4 id="status_paid" class="mdui-text-color-green" style="font-weight: bold;" hidden>已支付</h4>
+    <h4 id="status_unpaid" class="mdui-text-color-red" style="font-weight: bold;" hidden>未支付</h4>
 
-        <li class="mdui-list-item">
-          <strong>密码</strong>
-          <div class="mdui-list-item">
-            <button id="change_password"
-              class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple"
-              mdui-tooltip="{content: '修改'}">
-              <i class="mdui-icon material-icons">edit</i>
-            </button>
-          </div>
-        </li>
+    <div id="pay">
+      <div class="mdui-divider" style="margin-bottom: .6em;"></div>
 
-        <li class="mdui-list-item">
-          <strong>余额</strong>
-          <div id="balance" class="mdui-list-item mdui-textfield">
-          </div>
-          <button id="add_balance"
-            class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple"
-            mdui-tooltip="{content: '充值'}">
-            <i class="mdui-icon material-icons">add</i>
-          </button>
-        </li>
+      <div class="mdui-col-xs-3" style="margin-top: .4em;">
+        支付方式
+      </div>
 
-        <li class="mdui-list-item">
-          <strong>权限</strong>
-          <div id="permission" class="mdui-list-item mdui-textfield">
-          </div>
-        </li>
+      <div>
+        <select id="payment" class="mdui-select">
+          <option value="">请选择</option>
+        </select>
+      </div>
+    </div>
 
-        <li class="mdui-list-item">
-          <strong>Token</strong>
-          <div id="token" class="mdui-list-item mdui-textfield">
-          </div>
-          <button id="change_token"
-          class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple"
-          mdui-tooltip="{content: '重置'}">
-          <i class="mdui-icon material-icons">replay</i>
-        </button>
-        </li>
+    <div id="pay_info" style="display: none;">
+      <div class="mdui-divider" style="margin-top: .6em; margin-bottom: .6em;"></div>
 
-        <li class="mdui-list-item">
-          <strong>注册时间</strong>
-          <div id="registration_date" class="mdui-list-item mdui-textfield">
-          </div>
-        </li>
-      </ul>
+      <div id="qrcode" style="display: none;"></div>
+      <div id="redirect" style="display: none;">
+        <a id="pay_redirect" class="mdui-btn mdui-color-theme mdui-ripple">去支付</a>
+      </div>
     </div>
   </div>
 
-  <div id="changePassword" class="mdui-dialog">
-    <div class="mdui-dialog-title">修改密码</div>
-    <div class="mdui-dialog-content">
-      <ul class="mdui-list" mdui-collapse="{accordion: true}">
-        <li class="mdui-list-item">
-          旧密码
-          <div class="mdui-list-item mdui-textfield">
-            <input id="old_password" class="mdui-textfield-input" type="password" />
-          </div>
-        </li>
-
-        <li class="mdui-list-item">
-          新密码
-          <div class="mdui-list-item mdui-textfield">
-            <input id="new_password" class="mdui-textfield-input" type="password" />
-          </div>
-        </li>
-
-        <li class="mdui-list-item">
-          确认密码
-          <div class="mdui-list-item mdui-textfield">
-            <input id="confirm_password" class="mdui-textfield-input" type="password" />
-          </div>
-        </li>
-
-        <li class="mdui-list-item" id="changepw_enter">
-          <i class="mdui-list-item-icon mdui-icon material-icons">check</i>
-          <div class="mdui-list-item">确认</div>
-        </li>
-
-        <li class="mdui-list-item" id="changepw_cancel">
-          <i class="mdui-list-item-icon mdui-icon material-icons">close</i>
-          <div class="mdui-list-item">取消</div>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div id="AddBalance" class="mdui-dialog">
-    <div class="mdui-dialog-title">充值</div>
-    <div class="mdui-dialog-content">
-      <ul class="mdui-list" mdui-collapse="{accordion: true}">
-        <li class="mdui-list-item">
-          充值金额
-          <div class="mdui-list-item mdui-textfield">
-            <input id="add_balance_sum" class="mdui-textfield-input" type="number" placeholder="50" min="5" step="0.01" />
-          </div>
-        </li>
-
-        <li class="mdui-list-item" id="addbalance_enter">
-          <i class="mdui-list-item-icon mdui-icon material-icons">check</i>
-          <div class="mdui-list-item">确认</div>
-        </li>
-
-        <li class="mdui-list-item" id="addbalance_cancel">
-          <i class="mdui-list-item-icon mdui-icon material-icons">close</i>
-          <div class="mdui-list-item">取消</div>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <script src="src/theme.js"></script>
-  <script src="src/core.js"></script>
-  <script src="src/logout.js"></script>
-  <script src="src/user.js"></script>
-  <script src="src/foot.js"></script>
+  <script src="/src/theme.js"></script>
+  <script src="/src/core.js"></script>
+  <script src="/src/logout.js"></script>
+  <script src="/src/invoice.js"></script>
+  <script src="/src/foot.js"></script>
 </body>
 
 </html>

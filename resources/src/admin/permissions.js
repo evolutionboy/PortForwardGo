@@ -175,11 +175,6 @@ $("#edit_enter").on("click", function () {
     if (item.checked) nat_protocol.push($(this).attr("protocol"))
   });
 
-  if (!permission_id) {
-    sendmsg("权限组不能为空");
-    return;
-  }
-
   if (!id) {
     return;
   }
