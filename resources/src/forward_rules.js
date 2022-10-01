@@ -72,6 +72,7 @@ $("#newrule").on("click", function () {
 
   $("#add_mode option:selected").removeAttr("selected");
   $("#add_node option:selected").removeAttr("selected");
+  $("#add_nodeinfo").empty();
   $("#add_dest option:selected").removeAttr("selected");
   $("#add_outbound option:selected").removeAttr("selected");
   $("#add_proxyprotocol option:selected").removeAttr("selected");
@@ -91,6 +92,7 @@ $("#newrule").on("click", function () {
 });
 
 $("#add_node").on("change", function () {
+  $("#add_nodeinfo").empty();
   var node = $("#add_node option:selected").val();
 
   $("#add_outbound").html(`<option value="">系统默认</option>`);
@@ -126,6 +128,48 @@ $("#add_node").on("change", function () {
   })
 
   $("#add_protocol option:selected").removeAttr("selected");
+
+  $("#add_nodeinfo").append("端口范围 " + nodes[node].port_range)
+
+  if (nodes[node].reseved_ports != "") {
+    $("#add_nodeinfo").append("<br>");
+    $("#add_nodeinfo").append("保留端口 " + nodes[node].reseved_ports.replaceAll("\n", ","))
+  }
+
+  if (nodes[node].reseved_target_ports != "") {
+    $("#add_nodeinfo").append("<br>");
+    $("#add_nodeinfo").append("保留目标端口 " + nodes[node].reseved_target_ports.replaceAll("\n", ","))
+  }
+
+  if (nodes[node].tls_verify) {
+    $("#add_nodeinfo").append("<br>");
+    $("#add_nodeinfo").append("此节点所有TLS流量需要可信证书")
+  }
+
+  if (nodes[node].tls_verify_host) {
+    $("#add_nodeinfo").append("<br>");
+    $("#add_nodeinfo").append("此节点TLS HOST需要可信证书")
+  }
+
+  if (nodes[node].blocked_protocol != "") {
+    $("#add_nodeinfo").append("<br>");
+    $("#add_nodeinfo").append("屏蔽协议 " + nodes[node].blocked_protocol)
+  }
+
+  if (nodes[node].blocked_hostname != "") {
+    $("#add_nodeinfo").append("<br>");
+    $("#add_nodeinfo").append("屏蔽SNI " + nodes[node].blocked_hostname)
+  }
+
+  if (nodes[node].blocked_path != "") {
+    $("#add_nodeinfo").append("<br>");
+    $("#add_nodeinfo").append("屏蔽Path " + nodes[node].blocked_path)
+  }
+
+  if (nodes[node].note != "") {
+    $("#add_nodeinfo").append("<br><br>");
+    $("#add_nodeinfo").append("说明 " + nodes[node].note)
+  }
 })
 
 $("#add_enter").on("click", function () {

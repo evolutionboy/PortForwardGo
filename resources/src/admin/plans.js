@@ -136,7 +136,7 @@ function edit_plan(id) {
 
         $("#edit_rule").val(plan.rule);
         $("#edit_nat_rule").val(plan.nat_rule);
-        $("#edit_traffic").val(plan.traffic);
+        $("#edit_traffic").val(plan.traffic / 1073741824);
         $("#edit_speed").val(plan.speed);
         $("#edit_conn").val(plan.conn);
 

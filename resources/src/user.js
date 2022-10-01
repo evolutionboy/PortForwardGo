@@ -180,7 +180,7 @@ $("#addbalance_enter").on('click', function () {
     }
 
     $.ajax({
-        method: "PUT",
+        method: "POST",
         url: "/ajax/pay",
         dataType: "json",
         data: {
