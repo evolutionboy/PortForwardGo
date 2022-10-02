@@ -7,8 +7,8 @@ $("#base_save").on("click", function () {
   var certificate = $("#certificate").val();
   var certificate_key = $("#certificate_key").val();
 
-  var register = String($("#register").prop('check'));
-  var register_recaptcha = String($("#register_recaptcha").prop('check'));
+  var register = String($("#register").prop('checked'));
+  var register_recaptcha = String($("#register_recaptcha").prop('checked'));
   var recaptcha_public = $("#recaptcha_public").val();
   var recaptcha_private = $("#recaptcha_private").val();
 
