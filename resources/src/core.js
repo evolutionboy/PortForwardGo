@@ -6,11 +6,11 @@ function sendmsg(msg) {
 }
 
 function done() {
-  mdui.mutation()
-  mdui.updateTextFields()
-
   $("#loading").remove();
   $("#view").removeAttr("style");
+
+  mdui.mutation()
+  mdui.updateTextFields()
 }
 
 function adminBanner() {
