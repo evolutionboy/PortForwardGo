@@ -280,8 +280,112 @@
       </div>
     </div>
 
+
+    <div id="editRule" class="mdui-dialog">
+      <div class="mdui-dialog-title">编辑规则 <small class="mdui-text-color-grey">#<em id="edit_id"></em></small>
+      </div>
+      <div class="mdui-dialog-content">
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+          <li class="mdui-list-item">
+            名称
+            <div class="mdui-list-item mdui-textfield">
+              <input id="edit_name" class="mdui-textfield-input" type="text" />
+            </div>
+          </li>
+
+          <div class="mdui-divider"></div>
+
+          <li class="mdui-list-item">
+            模式
+            <div class="mdui-list-item">
+              <select id="edit_mode" class="mdui-select mdui-color-transparent">
+                <option value="0">单转发</option>
+                <option value="1">负载均衡</option>
+                <option value="2">故障转移</option>
+              </select>
+            </div>
+          </li>
+
+          <li id="tag_edit_target" class="mdui-collapse-item">
+            <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+              <div class="mdui-list-item-content">目标</div>
+              <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+            </div>
+
+            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+              <div id="tag_edit_targets"></div>
+
+              <li class="mdui-list-item">
+                <button id="edit_target"
+                  class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+                  <i class="mdui-list-item-icon mdui-icon material-icons">add</i>
+                </button>
+              </li>
+            </ul>
+          </li>
+
+          <li class="mdui-list-item">
+            流量出口
+            <div class="mdui-list-item">
+              <select id="edit_outbound" class="mdui-list-item mdui-select mdui-color-transparent">
+                <option value="">系统默认</option>
+              </select>
+            </div>
+          </li>
+
+          <li id="tag_edit_proxyprotocol" class="mdui-list-item">
+            代理协议 (Proxy Protocol)
+            <div class="mdui-list-item">
+              <select id="edit_proxyprotocol" class="mdui-select mdui-color-transparent">
+                <option value="0">关闭 (推荐)</option>
+                <option value="1">v1</option>
+                <option value="2">v2</option>
+              </select>
+            </div>
+          </li>
+
+          <div class="mdui-divider"></div>
+
+          <li class="mdui-collapse-item">
+            <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+              <div class="mdui-list-item-content">配置项</div>
+              <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+            </div>
+
+            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+              <div id="tag_edit_conf"></div>
+
+              <li class="mdui-list-item">
+                <div class="mdui-list-item mdui-textfield">
+                  <input id="edit_conf_name" class="mdui-textfield-input" type="text" />
+                </div>
+
+                <button id="edit_conf"
+                  class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+                  <i class="mdui-list-item-icon mdui-icon material-icons">add</i>
+                </button>
+              </li>
+            </ul>
+          </li>
+
+          <div class="mdui-divider"></div>
+
+          <li class="mdui-list-item" id="edit_enter">
+            <i class="mdui-list-item-icon mdui-icon material-icons">check</i>
+            <div class="mdui-list-item">确认</div>
+          </li>
+
+          <li class="mdui-list-item" id="edit_cancel">
+            <i class="mdui-list-item-icon mdui-icon material-icons">close</i>
+            <div class="mdui-list-item">取消</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
     <div id="debugRule" class="mdui-dialog">
-      <div class="mdui-dialog-title">诊断 <small class="mdui-text-color-grey">#<em id="info_id"></em></small></div>
+      <div class="mdui-dialog-title">诊断 <small class="mdui-text-color-grey">#<em id="debug_id"></em></small></div>
       <div class="mdui-dialog-content">
         <ul class="mdui-list" mdui-collapse="{accordion: true}">
           <li class="mdui-list-item">

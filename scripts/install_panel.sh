@@ -83,6 +83,7 @@ fi
 chmod 777 /tmp/PortForwardGoPanel
 mv /tmp/PortForwardGoPanel ${dir}
 mv /tmp/examples/panel.json ${dir}
+mv /tmp/resources ${dir}
 
 mv /tmp/systemd/PortForwardGoPanel.service /etc/systemd/system/${service_name}.service
 sed -i "s#{dir}#${dir}#g" /etc/systemd/system/${service_name}.service

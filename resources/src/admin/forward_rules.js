@@ -6,6 +6,7 @@ var users = [];
 var rules = [];
 
 var infoRule = new mdui.Dialog("#infoRule");
+var editRule = new mdui.Dialog("#editRule");
 var debugRule = new mdui.Dialog("#debugRule");
 
 var protocol = {
@@ -88,7 +89,6 @@ function info_rule(rule) {
     $("#info_targets").append(rule.targets[i].Host + ":" + rule.targets[i].Port + "<br>");
   }
 
-
   if (rule.outbound == "") $("#info_outbound").html("系统默认"); else $("#info_outbound").html(rule.outbound);
 
   switch (rule.proxy_protocol) {
@@ -125,6 +125,242 @@ function info_rule(rule) {
 
 $("#info_close").on("click", function () {
   infoRule.close();
+});
+
+
+function edit_rule(id) {
+  $("#edit_conf").val("");
+  $("#tag_edit_targets").empty();
+  $("#tag_edit_conf").empty();
+
+  $.ajax({
+    method: "GET",
+    url: "/ajax/forward_rule?id=" + id,
+    dataType: "json",
+  })
+    .done(function (response) {
+      if (response.Ok) {
+        rule = response.Data;
+
+        $("#edit_id").html(id);
+        $("#edit_name").val(rule.name);
+
+        $("#edit_mode option:selected").removeAttr("selected");
+        $("#edit_mode")
+          .find("option[value=" + rule.mode + "]")
+          .prop("selected", true);
+
+        $("#edit_proxyprotocol option:selected").removeAttr("selected");
+        $("#edit_proxyprotocol")
+          .find("option[value=" + rule.proxy_protocol + "]")
+          .prop("selected", true);
+
+        if (rule.targets != null) {
+          for (i in rule.targets) {
+            var html = `
+<li target="${i}" class="mdui-list-item">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
+      <input target="${i}" class="mdui-textfield-input" type="text" placeholder="127.0.0.1" />
+  </div>
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
+      <input target="${i}" class="mdui-textfield-input" type="number" min="1" max="65535" placeholder="8080" />
+  </div>
+  <button target="${i}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
+  </button>
+</li>`;
+
+            $("#tag_edit_targets").append(html);
+            $(`input[target="${i}"][type=text]`).val(
+              rule.targets[i].Host
+            );
+
+            $(`input[target="${i}"][type=number]`).val(
+              rule.targets[i].Port
+            );
+
+            $(`button[target="${i}"]`).on("click", null, i, function (event) {
+              $(`li[target="${event.data}"]`).remove();
+            });
+          }
+        }
+
+        $("#edit_outbound").html(`<option value="">系统默认</option>`);
+        if (nodes[rule.node_id].outbounds != null && nodes[rule.node_id].outbounds.length > 0) {
+          for (i in nodes[rule.node_id].outbounds) {
+            var outbound = nodes[rule.node_id].outbounds[i];
+            $("#edit_outbound").append(`<option value="${outbound}">${outbound}</option>`);
+          }
+        }
+
+        $("#edit_outbound option:selected").removeAttr("selected");
+        if (rule.outbound != "") {
+          $("#edit_outbound")
+            .find("option[value=" + rule.outbound + "]")
+            .prop("selected", true);
+        }
+
+        if (rule.conf != null) {
+          for (key in rule.conf) {
+            var html = `
+    <li conf="${key}" class="mdui-list-item mdui-row">
+      <div class="mdui-col-xs-3">${key}</div>
+      <div class="mdui-list-item mdui-textfield">
+        <input conf="${key}" class="mdui-textfield-input" type="text" />
+      </div>
+      <button conf="${key}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
+      </button>
+    </li>`;
+            $("#tag_edit_conf").append(html);
+            $(`input[conf="${key}"]`).val(rule.conf[key]);
+
+            $(`button[conf="${key}"]`).on("click", null, key, function (event) {
+              $(`li[conf="${event.data}"]`).remove();
+            });
+          }
+        }
+
+        mdui.mutation()
+        mdui.updateTextFields()
+
+        editRule.open();
+      } else sendmsg(response.Msg);
+    })
+    .fail(function () {
+      sendmsg("请求失败, 请检查网络是否正常");
+    });
+}
+
+$("#edit_enter").on("click", function () {
+  var id = $("#edit_id").html();
+
+  var name = $("#edit_name").val();
+  var mode = Number($("#edit_mode option:selected").val());
+  var outbound = $("#edit_outbound option:selected").val();
+  var proxy_protocol = Number($("#edit_proxyprotocol option:selected").val());
+  var targets = [];
+  var config = {};
+
+  if (!id) {
+    return;
+  }
+
+  $("input[conf]").each(function () {
+    if (!$(this).val()) {
+      sendmsg("请填完所有选项");
+      return;
+    }
+
+    var key = $(this).attr("conf");
+    config[key] = $(this).val();
+  });
+
+  $("input[target][type=text]").each(function (index, item) {
+    if (!item.value) {
+      sendmsg("请填完所有选项");
+      return;
+    }
+
+    var port = Number($("input[target=" + index + "][type=number]").val());
+    if (!port || port < 1 || port > 65535) {
+      sendmsg("端口不能为空 且需要在 1~65535 内");
+      return;
+    }
+
+    targets.push({
+      Host: item.value,
+      Port: port,
+    });
+  });
+
+  $.ajax({
+    method: "PUT",
+    url: "/ajax/forward_rule?id=" + id,
+    dataType: "json",
+    contentType: "application/json",
+    data: JSON.stringify({
+      name: name,
+      mode: mode,
+      targets: targets,
+      outbound: outbound,
+      proxy_protocol: proxy_protocol,
+      conf: config,
+    }),
+  })
+    .done(function (response) {
+      if (response.Ok) {
+        sendmsg("修改成功");
+        editRule.close();
+        load_rules();
+      } else sendmsg(response.Msg);
+    })
+    .fail(function () {
+      sendmsg("请求失败, 请检查网络是否正常");
+    });
+});
+
+$("#edit_cancel").on("click", function () {
+  editRule.close();
+});
+
+$("#edit_target").on("click", function () {
+  var i = 0;
+  for (i = 0; $(`[target=${i}]`).length > 0; i++) { }
+
+  var html = `
+<li target="${i}" class="mdui-list-item">
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
+      <input target="${i}" class="mdui-textfield-input" type="text" placeholder="127.0.0.1" />
+  </div>
+  <div class="mdui-list-item mdui-textfield" style="padding-left: 0px;">
+      <input target="${i}" class="mdui-textfield-input" type="number" min="1" max="65535" placeholder="8080" />
+  </div>
+  <button target="${i}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
+  </button>
+</li>`;
+  $("#tag_edit_targets").append(html);
+
+  $(`button[target="${i}"]`).on("click", null, i, function (event) {
+    $(`li[target="${event.data}"]`).remove();
+  });
+
+  mdui.mutation()
+  mdui.updateTextFields()
+});
+
+$("#edit_conf").on("click", function () {
+  var conf = $("#edit_conf_name").val();
+  if (!conf) {
+    sendmsg("配置项名称不能为空");
+    return;
+  }
+
+  if ($(`[conf="${conf}"]`).length > 0) {
+    sendmsg("配置项已存在");
+    return;
+  }
+
+  var html = `
+<li conf="${conf}" class="mdui-list-item">${conf}
+  <div class="mdui-list-item mdui-textfield">
+      <input conf="${conf}" class="mdui-textfield-input" type="text" placeholder="127.0.0.1:8080" />
+  </div>
+  <button conf="${conf}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
+  </button>
+</li>`;
+  $("#tag_edit_conf").append(html);
+
+  $(`button[conf="${conf}"]`).on("click", null, conf, function (event) {
+    $(`li[conf="${event.data}"]`).remove();
+  });
+
+  $("#edit_conf_name").val('');
+
+  mdui.mutation()
+  mdui.updateTextFields()
 });
 
 function delete_rule(id) {
@@ -252,6 +488,9 @@ function load_rules() {
             <span id="start_${rule.id}" class="mdui-btn mdui-btn-icon" style="display: none;" mdui-tooltip="{content: '启用'}">
               <i class="mdui-icon material-icons">play_circle_outline</i>
             </span>
+            <span id="edit_${rule.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '编辑'}">
+              <i class="mdui-icon material-icons">edit</i>
+            </span>
             <span id="delete_${rule.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '删除'}">
               <i class="mdui-icon material-icons">delete</i>
             </span>
@@ -288,6 +527,10 @@ function load_rules() {
 
           $(`#debug_${rule.id}`).on("click", null, rule.id, function (event) {
             debug_rule(event.data);
+          });
+
+          $(`#edit_${rule.id}`).on("click", null, rule.id, function (event) {
+            edit_rule(event.data);
           });
 
           $(`#delete_${rule.id}`).on("click", null, rule.id, function (event) {
@@ -392,6 +635,9 @@ function reload_rules() {
             <span id="start_${rule.id}" class="mdui-btn mdui-btn-icon" style="display: none;" mdui-tooltip="{content: '启用'}">
               <i class="mdui-icon material-icons">play_circle_outline</i>
             </span>
+            <span id="edit_${rule.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '编辑'}">
+              <i class="mdui-icon material-icons">edit</i>
+            </span>
             <span id="delete_${rule.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '删除'}">
               <i class="mdui-icon material-icons">delete</i>
             </span>
@@ -428,6 +674,10 @@ function reload_rules() {
 
     $(`#start_${rule.id}`).on("click", null, rule.id, function (event) {
       start_rule(event.data);
+    });
+
+    $(`#edit_${rule.id}`).on("click", null, rule.id, function (event) {
+      edit_rule(event.data);
     });
 
     $(`#delete_${rule.id}`).on("click", null, rule.id, function (event) {
