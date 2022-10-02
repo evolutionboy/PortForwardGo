@@ -135,7 +135,7 @@ function edit_rule(id) {
 
   $.ajax({
     method: "GET",
-    url: "/ajax/forward_rule?id=" + id,
+    url: "/ajax/admin/forward_rule?id=" + id,
     dataType: "json",
   })
     .done(function (response) {
@@ -276,7 +276,7 @@ $("#edit_enter").on("click", function () {
 
   $.ajax({
     method: "PUT",
-    url: "/ajax/forward_rule?id=" + id,
+    url: "/ajax/admin/forward_rule?id=" + id,
     dataType: "json",
     contentType: "application/json",
     data: JSON.stringify({

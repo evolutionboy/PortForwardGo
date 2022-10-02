@@ -106,7 +106,7 @@ function edit_rule(id) {
 
   $.ajax({
     method: "GET",
-    url: "/ajax/nat_forward_rule?id=" + id,
+    url: "/ajax/admin/nat_forward_rule?id=" + id,
     dataType: "json",
   })
     .done(function (response) {
@@ -187,7 +187,7 @@ $("#edit_enter").on("click", function () {
 
   $.ajax({
     method: "PUT",
-    url: "/ajax/nat_forward_rule?id=" + id,
+    url: "/ajax/admin/nat_forward_rule?id=" + id,
     dataType: "json",
     contentType: "application/json",
     data: JSON.stringify({
