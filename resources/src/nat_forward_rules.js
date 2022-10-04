@@ -74,8 +74,8 @@ $("#newrule").on("click", function () {
 
   $("#tag_add_proxyprotocol").attr("style", "display: none;");
 
-  $("#tag_add_targets").empty();
-  $("#tag_edit_targets").empty();
+  $("#add_target_host").val("");
+  $("#add_target_port").val("");
   $("#tag_add_conf").empty();
   $("#tag_edit_conf").empty();
 

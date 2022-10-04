@@ -35,7 +35,6 @@
         <div class="mdui-list-item-content">概览</div>
       </a>
 
-
       <div class="mdui-divider"></div>
 
       <a class="mdui-collapse-item">
@@ -90,7 +89,7 @@
         </div>
       </a>
 
-      <a class="mdui-collapse-item mdui-collapse-item-open">
+      <a class="mdui-collapse-item">
         <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
           <i class="mdui-list-item-icon mdui-icon material-icons">book</i>
           <div class="mdui-list-item-content">帮助</div>
@@ -98,7 +97,7 @@
         </div>
 
         <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
-          <li href="/help" class="mdui-list-item mdui-ripple mdui-list-item-active">教程</li>
+          <li href="/help" class="mdui-list-item mdui-ripple">教程</li>
           <li href="/documents" class="mdui-list-item mdui-ripple">文档</li>
           <li href="/looking-glass" class="mdui-list-item mdui-ripple">Looking Glass</li>
         </div>
@@ -111,7 +110,7 @@
         <div class="mdui-list-item-content">用户信息</div>
       </a>
 
-      <a id="admin_banner" class="mdui-collapse-item" style="display: none;">
+      <a class="mdui-collapse-item mdui-collapse-item-open">
         <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
           <i class="mdui-list-item-icon mdui-icon material-icons">build</i>
           <div class="mdui-list-item-content">管理</div>
@@ -126,7 +125,7 @@
           <li href="/admin/plans" class="mdui-list-item mdui-ripple">套餐</li>
           <li href="/admin/permissions" class="mdui-list-item mdui-ripple">权限</li>
           <li class="mdui-divider"></li>
-          <li href="/admin/invoices" class="mdui-list-item mdui-ripple">账单</li>
+          <li href="/admin/invoices" class="mdui-list-item mdui-ripple mdui-list-item-active">账单</li>
           <li href="/admin/announcements" class="mdui-list-item mdui-ripple">公告</li>
           <li href="/admin/settings" class="mdui-list-item mdui-ripple">设置</li>
         </div>
@@ -141,14 +140,34 @@
     </div>
   </div>
 
-  <div class="mdui-container mdui-p-t-3">
+  <div id="loading" class="mdui-container mdui-typo mdui-valign" style="height: 100%;">
+    <div class="mdui-spinner mdui-spinner-colorful mdui-center"></div>
   </div>
 
-  <script src="src/theme.js"></script>
-  <script src="src/core.js"></script>
-  <script src="src/logout.js"></script>
-  <script src="src/info.js"></script>
-  <script src="src/foot.js"></script>
+  <div id="view" class="mdui-container mdui-p-t-3" style="display: none;">
+    <div class="mdui-table-fluid">
+      <table class="mdui-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>用户</th>
+            <th>金额</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+
+        <tbody id="invoices-table-body">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="/src/theme.js"></script>
+  <script src="/src/core.js"></script>
+  <script src="/src/logout.js"></script>
+  <script src="/src/admin/invoices.js"></script>
+  <script src="/src/foot.js"></script>
 </body>
 
 </html>

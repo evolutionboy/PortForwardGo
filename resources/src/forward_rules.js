@@ -7,6 +7,7 @@ var rules = [];
 
 var infoRule = new mdui.Dialog("#infoRule");
 var newRule = new mdui.Dialog("#addRule");
+var newRules = new mdui.Dialog("#addRules");
 var editRule = new mdui.Dialog("#editRule");
 var debugRule = new mdui.Dialog("#debugRule");
 
@@ -83,12 +84,34 @@ $("#newrule").on("click", function () {
   $("#tag_add_targets").empty();
   $("#tag_edit_targets").empty();
   $("#tag_add_conf").empty();
+  $("#tag_adds_conf").empty();
   $("#tag_edit_conf").empty();
 
   mdui.mutation()
   mdui.updateTextFields()
 
   newRule.open();
+});
+
+$("#newrules").on("click", function () {
+  $("#adds_node option:selected").removeAttr("selected");
+  $("#adds_nodeinfo").empty();
+  $("#adds_data").val("");
+  $("#adds_dest option:selected").removeAttr("selected");
+  $("#adds_outbound option:selected").removeAttr("selected");
+  $("#adds_proxyprotocol option:selected").removeAttr("selected");
+  $("#adds_protocol option:selected").removeAttr("selected");
+
+  $("#tag_adds_dest").attr("style", "display: none;");
+
+  $("#tag_add_conf").empty();
+  $("#tag_adds_conf").empty();
+  $("#tag_edit_conf").empty();
+
+  mdui.mutation()
+  mdui.updateTextFields()
+
+  newRules.open();
 });
 
 $("#add_node").on("change", function () {
@@ -169,6 +192,87 @@ $("#add_node").on("change", function () {
   if (nodes[node].note != "") {
     $("#add_nodeinfo").append("<br><br>");
     $("#add_nodeinfo").append("说明 " + nodes[node].note)
+  }
+})
+
+$("#adds_node").on("change", function () {
+  $("#adds_nodeinfo").empty();
+  var node = $("#adds_node option:selected").val();
+
+  $("#adds_outbound").html(`<option value="">系统默认</option>`);
+  if (node == 0) {
+    return;
+  }
+
+  if (nodes[node] == null) {
+    return;
+  }
+
+  if (nodes[node].outbounds != null && nodes[node].outbounds.length > 0) {
+    for (i in nodes[node].outbounds) {
+      var outbound = nodes[node].outbounds[i];
+      $("#adds_outbound").append(`<option value="${outbound}">${outbound}</option>`);
+    }
+  }
+
+  var protocols = nodes[node].protocol.split("|");
+  $("#adds_protocol").find("option").each(function () {
+    if ($(this).val() == "none") {
+      return;
+    }
+
+    if (protocols.indexOf($(this).val()) == -1) {
+      $(this).attr("style", "display: none;")
+      $(this).attr("disabled", true)
+      return;
+    }
+
+    $(this).removeAttr("style")
+    $(this).removeAttr("disabled")
+  })
+
+  $("#adds_protocol option:selected").removeAttr("selected");
+
+  $("#adds_nodeinfo").append("端口范围 " + nodes[node].port_range)
+
+  if (nodes[node].reseved_ports != "") {
+    $("#adds_nodeinfo").append("<br>");
+    $("#adds_nodeinfo").append("保留端口 " + nodes[node].reseved_ports.replaceAll("\n", ","))
+  }
+
+  if (nodes[node].reseved_target_ports != "") {
+    $("#adds_nodeinfo").append("<br>");
+    $("#adds_nodeinfo").append("保留目标端口 " + nodes[node].reseved_target_ports.replaceAll("\n", ","))
+  }
+
+  if (nodes[node].tls_verify) {
+    $("#adds_nodeinfo").append("<br>");
+    $("#adds_nodeinfo").append("此节点所有TLS流量需要可信证书")
+  }
+
+  if (nodes[node].tls_verify_host) {
+    $("#adds_nodeinfo").append("<br>");
+    $("#adds_nodeinfo").append("此节点TLS HOST需要可信证书")
+  }
+
+  if (nodes[node].blocked_protocol != "") {
+    $("#adds_nodeinfo").append("<br>");
+    $("#adds_nodeinfo").append("屏蔽协议 " + nodes[node].blocked_protocol)
+  }
+
+  if (nodes[node].blocked_hostname != "") {
+    $("#adds_nodeinfo").append("<br>");
+    $("#adds_nodeinfo").append("屏蔽SNI " + nodes[node].blocked_hostname)
+  }
+
+  if (nodes[node].blocked_path != "") {
+    $("#adds_nodeinfo").append("<br>");
+    $("#adds_nodeinfo").append("屏蔽Path " + nodes[node].blocked_path)
+  }
+
+  if (nodes[node].note != "") {
+    $("#adds_nodeinfo").append("<br><br>");
+    $("#adds_nodeinfo").append("说明 " + nodes[node].note)
   }
 })
 
@@ -285,8 +389,118 @@ $("#add_enter").on("click", function () {
     });
 });
 
+$("#adds_enter").on("click", function () {
+  var data = $("#adds_data").val();
+
+  var node = Number($("#adds_node option:selected").val());
+  var protocol = $("#adds_protocol option:selected").val();
+
+  var outbound = $("#adds_outbound option:selected").val();
+  var proxy_protocol = Number($("#adds_proxyprotocol option:selected").val());
+
+  var dest_node = 0;
+  var dest_device = 0;
+  var config = {};
+
+  if (node == 0 || !data) {
+    sendmsg("请填完所有选项");
+    return;
+  }
+
+  $("input[conf]").each(function () {
+    if (!$(this).val()) {
+      sendmsg("请填完所有选项");
+      return;
+    }
+
+    var key = $(this).attr("conf");
+    config[key] = $(this).val();
+  });
+
+  var dest = Number($("#add_dest option:selected").val());
+  switch (protocol) {
+    case "none":
+      sendmsg("请填完所有选项");
+      return;
+
+    case "http": case "https":
+      if (!bind) {
+        sendmsg("请填完所有选项");
+        return;
+      }
+      break;
+
+    case "secure": case "securex": case "tls":
+      if (!dest) {
+        sendmsg("请选择出口节点");
+        return;
+      }
+
+      switch ($("#add_dest option:selected").attr("data-type")) {
+        case "node":
+          dest_node = dest;
+          break;
+        case "device":
+          dest_device = dest;
+          break;
+        default:
+          sendmsg("出口节点不可用");
+          return;
+      }
+      break;
+  }
+
+  var close = true;
+  var lines = data.split("\n");
+  for (i in lines) {
+    var line = lines[i].split("#");
+
+    if (line.length != 4) continue;
+
+    $.ajax({
+      method: "POST",
+      url: "/ajax/forward_rule",
+      dataType: "json",
+      contentType: "application/json",
+      async: false,
+      data: JSON.stringify({
+        name: line[0],
+        mode: 0,
+        protocol: protocol,
+        bind: line[1],
+        targets: [{ Host: line[2], Port: Number(line[3]) }],
+        outbound: outbound,
+        proxy_protocol: proxy_protocol,
+        conf: config,
+
+        node_id: node,
+        dest_node: dest_node,
+        dest_device: dest_device,
+      }),
+    })
+      .done(function (response) {
+        if (response.Ok) {
+          sendmsg("添加成功");
+        } else {
+          close = false
+          sendmsg(`第${i + 1}行: ` + response.Msg);
+        }
+      })
+      .fail(function () {
+        close = false
+        sendmsg(`第${i + 1}行: 请求失败, 请检查网络是否正常`);
+      });
+  }
+  load_rules();
+  if (close) newRules.close();
+});
+
 $("#add_cancel").on("click", function () {
   newRule.close();
+});
+
+$("#adds_cancel").on("click", function () {
+  newRules.close();
 });
 
 $("#add_target").on("click", function () {
@@ -329,7 +543,7 @@ $("#add_conf").on("click", function () {
 
   var html = `
 <li conf="${conf}" class="mdui-list-item mdui-row">
-  <div class="mdui-col-xs-3">${conf}</div>
+  <div class="mdui-list-item mdui-col-xs-3">${conf}</div>
   <div class="mdui-list-item mdui-textfield">
       <input conf="${conf}" class="mdui-textfield-input" type="text" />
   </div>
@@ -344,6 +558,40 @@ $("#add_conf").on("click", function () {
   });
 
   $("#add_conf_name").val('')
+
+  mdui.mutation()
+  mdui.updateTextFields()
+});
+
+$("#adds_conf").on("click", function () {
+  var conf = $("#adds_conf_name").val();
+  if (!conf) {
+    sendmsg("配置项名称不能为空");
+    return;
+  }
+
+  if ($(`[conf="${conf}"]`).length > 0) {
+    sendmsg("配置项已存在");
+    return;
+  }
+
+  var html = `
+<li conf="${conf}" class="mdui-list-item mdui-row">
+  <div class="mdui-list-item mdui-col-xs-3">${conf}</div>
+  <div class="mdui-list-item mdui-textfield">
+      <input conf="${conf}" class="mdui-textfield-input" type="text" />
+  </div>
+  <button conf="${conf}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
+  </button>
+</li>`;
+  $("#tag_adds_conf").append(html);
+
+  $(`button[conf="${conf}"]`).on("click", null, conf, function (event) {
+    $(`li[conf="${event.data}"]`).remove();
+  });
+
+  $("#adds_conf_name").val('')
 
   mdui.mutation()
   mdui.updateTextFields()
@@ -368,6 +616,28 @@ $("#add_protocol").on("change", function () {
     default:
       $("#tag_add_bind").html("监听端口");
       $("#add_bind").prop("placeholder", "留空系统自动分配");
+  }
+});
+
+$("#adds_protocol").on("change", function () {
+  var protocol = $("#adds_protocol option:selected").val();
+
+  switch (protocol) {
+    case "secure": case "securex": case "tls":
+      $("#tag_adds_dest").removeAttr("style");
+      break;
+    default:
+      $("#tag_adds_dest").attr("style", "display: none;");
+  }
+
+  switch (protocol) {
+    case "http": case "https":
+      $("#tag_adds_bind").html("绑定域名");
+      $("#adds_bind").prop("placeholder", "example.com");
+      break;
+    default:
+      $("#tag_adds_bind").html("监听端口");
+      $("#adds_bind").prop("placeholder", "留空系统自动分配");
   }
 });
 
@@ -449,6 +719,7 @@ function edit_rule(id) {
   $("#tag_add_targets").empty();
   $("#tag_edit_targets").empty();
   $("#tag_add_conf").empty();
+  $("#tag_adds_conf").empty();
   $("#tag_edit_conf").empty();
 
   $.ajax({
@@ -514,7 +785,7 @@ function edit_rule(id) {
         $("#edit_outbound option:selected").removeAttr("selected");
         if (rule.outbound != "") {
           $("#edit_outbound")
-            .find("option[value=" + rule.outbound + "]")
+            .find("option[value='" + rule.outbound + "']")
             .prop("selected", true);
         }
 
@@ -522,7 +793,7 @@ function edit_rule(id) {
           for (key in rule.conf) {
             var html = `
     <li conf="${key}" class="mdui-list-item mdui-row">
-      <div class="mdui-col-xs-3">${key}</div>
+      <div class="mdui-list-item mdui-col-xs-3">${key}</div>
       <div class="mdui-list-item mdui-textfield">
         <input conf="${key}" class="mdui-textfield-input" type="text" />
       </div>
@@ -661,14 +932,15 @@ $("#edit_conf").on("click", function () {
   }
 
   var html = `
-<li conf="${conf}" class="mdui-list-item">${conf}
-  <div class="mdui-list-item mdui-textfield">
-      <input conf="${conf}" class="mdui-textfield-input" type="text" placeholder="127.0.0.1:8080" />
-  </div>
-  <button conf="${conf}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
-      <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
-  </button>
-</li>`;
+  <li conf="${conf}" class="mdui-list-item mdui-row">
+    <div class="mdui-list-item mdui-col-xs-3">${conf}</div>
+    <div class="mdui-list-item mdui-textfield">
+        <input conf="${conf}" class="mdui-textfield-input" type="text" />
+    </div>
+    <button conf="${conf}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
+    </button>
+  </li>`;
   $("#tag_edit_conf").append(html);
 
   $(`button[conf="${conf}"]`).on("click", null, conf, function (event) {
@@ -1030,13 +1302,17 @@ function load_nodes() {
           switch (node.permission) {
             case 1:
               $("#add_node").append(`<option value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
+              $("#adds_node").append(`<option value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
               break;
             case 2:
               $("#add_dest").append(`<option data-type="node" value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
+              $("#adds_dest").append(`<option data-type="node" value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
               break;
             case 3:
               $("#add_node").append(`<option value="${node.id}">${node.name}</option>`);
               $("#add_dest").append(`<option data-type="node" value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
+              $("#adds_node").append(`<option value="${node.id}">${node.name}</option>`);
+              $("#adds_dest").append(`<option data-type="node" value="${node.id}">${node.name} (${node.speed}倍速率 ${node.traffic}倍消耗)</option>`);
               break;
           }
         }
@@ -1095,6 +1371,7 @@ function load_devices() {
           devices[device.id] = device;
 
           $("#add_dest").append(`<option data-type="device" value="${device.id}">${device.name}</option>`);
+          $("#adds_dest").append(`<option data-type="device" value="${device.id}">${device.name}</option>`);
         }
 
       } else sendmsg(response.Msg);
@@ -1235,6 +1512,7 @@ function copy_rule(rule) {
   $("#tag_add_targets").empty();
   $("#tag_edit_targets").empty();
   $("#tag_add_conf").empty();
+  $("#tag_adds_conf").empty();
   $("#tag_edit_conf").empty();
 
   if (rule.targets != null) {
@@ -1271,7 +1549,7 @@ function copy_rule(rule) {
     for (key in rule.conf) {
       var html = `
     <li conf="${key}" class="mdui-list-item mdui-row">
-      <div class="mdui-col-xs-3">${key}</div>
+      <div class="mdui-list-item mdui-col-xs-3">${key}</div>
       <div class="mdui-list-item mdui-textfield">
         <input conf="${key}" class="mdui-textfield-input" type="text" />
       </div>

@@ -85,6 +85,7 @@
         </div>
 
         <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+          <li href="/invoices" class="mdui-list-item mdui-ripple mdui-list-item-active">账单</li>
           <li href="/plan" class="mdui-list-item mdui-ripple">我的套餐</li>
           <li href="/cart" class="mdui-list-item mdui-ripple">购买套餐</li>
         </div>
@@ -126,6 +127,7 @@
           <li href="/admin/plans" class="mdui-list-item mdui-ripple">套餐</li>
           <li href="/admin/permissions" class="mdui-list-item mdui-ripple">权限</li>
           <li class="mdui-divider"></li>
+          <li href="/admin/invoices" class="mdui-list-item mdui-ripple">账单</li>
           <li href="/admin/announcements" class="mdui-list-item mdui-ripple">公告</li>
           <li href="/admin/settings" class="mdui-list-item mdui-ripple">设置</li>
         </div>
@@ -168,6 +170,10 @@
 
     <div id="pay_info" style="display: none;">
       <div class="mdui-divider" style="margin-top: .6em; margin-bottom: .6em;"></div>
+
+      <div id="progress" class="mdui-progress">
+        <div class="mdui-progress-indeterminate"></div>
+      </div>
 
       <div id="qrcode" style="display: none;"></div>
       <div id="redirect" style="display: none;">

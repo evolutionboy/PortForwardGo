@@ -83,6 +83,7 @@
         </div>
 
         <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+          <li href="/invoices" class="mdui-list-item mdui-ripple">账单</li>
           <li href="/plan" class="mdui-list-item mdui-ripple">我的套餐</li>
           <li href="/cart" class="mdui-list-item mdui-ripple">购买套餐</li>
         </div>
@@ -124,6 +125,7 @@
           <li href="/admin/plans" class="mdui-list-item mdui-ripple">套餐</li>
           <li href="/admin/permissions" class="mdui-list-item mdui-ripple">权限</li>
           <li class="mdui-divider"></li>
+          <li href="/admin/invoices" class="mdui-list-item mdui-ripple">账单</li>
           <li href="/admin/announcements" class="mdui-list-item mdui-ripple">公告</li>
           <li href="/admin/settings" class="mdui-list-item mdui-ripple">设置</li>
         </div>
@@ -193,7 +195,7 @@
             </div>
           </div>
 
-          <div class="mdui-float-right" mdui-tooltip="{content: '批量添加'}" hidden>
+          <div class="mdui-float-right" mdui-tooltip="{content: '批量添加'}">
             <button id="newrules"
               class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
               <i class="mdui-icon material-icons">playlist_add</i>
@@ -338,7 +340,7 @@
           <li class="mdui-list-item">
             入口节点
             <div class="mdui-list-item">
-              <select id="add_node" class="mdui-list-item mdui-select mdui-color-transparent">
+              <select id="add_node" class="mdui-select mdui-color-transparent">
                 <option value="0">请选择</option>
               </select>
             </div>
@@ -352,7 +354,7 @@
           <li class="mdui-list-item">
             协议
             <div class="mdui-list-item">
-              <select id="add_protocol" class="mdui-list-item mdui-select mdui-color-transparent">
+              <select id="add_protocol" class="mdui-select mdui-color-transparent">
                 <option value="none">请选择</option>
                 <option value="tcpudp">TCP+UDP</option>
                 <option value="http">HTTP</option>
@@ -372,12 +374,20 @@
             </div>
           </li>
 
+          <li id="tag_add_dest" class="mdui-list-item" style="display: none;">
+            出口节点
+            <div class="mdui-list-item">
+              <select id="add_dest" class="mdui-select mdui-color-transparent">
+              </select>
+            </div>
+          </li>
+
           <div class="mdui-divider"></div>
 
           <li class="mdui-list-item">
             模式
             <div class="mdui-list-item">
-              <select id="add_mode" class="mdui-list-item mdui-select mdui-color-transparent">
+              <select id="add_mode" class="mdui-select mdui-color-transparent">
                 <option value="0">单转发</option>
                 <option value="1">负载均衡</option>
                 <option value="2">故障转移</option>
@@ -403,55 +413,178 @@
             </ul>
           </li>
 
+          <div class="mdui-divider"></div>
+
+          <li class="mdui-collapse-item">
+            <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+              <div class="mdui-list-item-content">高级设置</div>
+              <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+            </div>
+
+            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense" mdui-collapse="{accordion: true}">
+              <li class="mdui-list-item">
+                流量出口
+                <div class="mdui-list-item">
+                  <select id="add_outbound" class="mdui-select mdui-color-transparent">
+                    <option value="">系统默认</option>
+                  </select>
+                </div>
+              </li>
+
+              <li class="mdui-list-item">
+                代理协议 (Proxy Protocol)
+                <div class="mdui-list-item">
+                  <select id="add_proxyprotocol" class="mdui-select mdui-color-transparent">
+                    <option value="0">关闭 (推荐)</option>
+                    <option value="1">v1</option>
+                    <option value="2">v2</option>
+                  </select>
+                </div>
+              </li>
+
+              <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                  <div class="mdui-list-item-content">配置项</div>
+                  <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+                </div>
+
+                <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                  <div id="tag_add_conf"></div>
+
+                  <li class="mdui-list-item">
+                    <div class="mdui-list-item mdui-textfield">
+                      <input id="add_conf_name" class="mdui-textfield-input" type="text" />
+                    </div>
+
+                    <button id="add_conf"
+                      class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+                      <i class="mdui-list-item-icon mdui-icon material-icons">add</i>
+                    </button>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
+          </li>
+
+          <div class="mdui-divider"></div>
+
+          <li class="mdui-list-item" id="adds_enter">
+            <i class="mdui-list-item-icon mdui-icon material-icons">check</i>
+            <div class="mdui-list-item">确认</div>
+          </li>
+
+          <li class="mdui-list-item" id="adds_cancel">
+            <i class="mdui-list-item-icon mdui-icon material-icons">close</i>
+            <div class="mdui-list-item">取消</div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+    <div id="addRules" class="mdui-dialog">
+      <div class="mdui-dialog-title">批量添加规则</div>
+      <div class="mdui-dialog-content">
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
           <li class="mdui-list-item">
-            流量出口
+            入口节点
             <div class="mdui-list-item">
-              <select id="add_outbound" class="mdui-list-item mdui-select mdui-color-transparent">
-                <option value="">系统默认</option>
+              <select id="adds_node" class="mdui-select mdui-color-transparent">
+                <option value="0">请选择</option>
               </select>
             </div>
           </li>
 
           <li class="mdui-list-item">
-            代理协议 (Proxy Protocol)
+            节点信息
+            <div id="adds_nodeinfo" class="mdui-list-item"></div>
+          </li>
+
+          <li class="mdui-list-item">
+            协议
             <div class="mdui-list-item">
-              <select id="add_proxyprotocol" class="mdui-list-item mdui-select mdui-color-transparent">
-                <option value="0">关闭 (推荐)</option>
-                <option value="1">v1</option>
-                <option value="2">v2</option>
+              <select id="adds_protocol" class="mdui-select mdui-color-transparent">
+                <option value="none">请选择</option>
+                <option value="tcpudp">TCP+UDP</option>
+                <option value="http">HTTP</option>
+                <option value="https">HTTPS</option>
+                <option value="host">TLS HOST</option>
+                <option value="secure">Secure隧道</option>
+                <option value="securex">SecureX隧道</option>
+                <option value="tls">TLS隧道</option>
+              </select>
+            </div>
+          </li>
+
+          <li id="tag_adds_dest" class="mdui-list-item" style="display: none;">
+            出口节点
+            <div class="mdui-list-item">
+              <select id="adds_dest" class="mdui-select mdui-color-transparent">
               </select>
             </div>
           </li>
 
           <div class="mdui-divider"></div>
 
-          <li id="tag_add_dest" class="mdui-list-item" style="display: none;">
-            出口节点
-            <div class="mdui-list-item">
-              <select id="add_dest" class="mdui-list-item mdui-select mdui-color-transparent">
-              </select>
+          <li class="mdui-list-item">
+            内容
+            <div class="mdui-list-item mdui-textfield">
+              <textarea id="adds_data" class="mdui-textfield-input" type="text" placeholder="名称#监听端口#目标地址#目标端口&#10;示例#10001#127.0.0.1#80" style="min-height: 56px; min-width: 400px"></textarea>
             </div>
           </li>
 
+          <div class="mdui-divider"></div>
+
           <li class="mdui-collapse-item">
             <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
-              <div class="mdui-list-item-content">配置项</div>
+              <div class="mdui-list-item-content">高级设置</div>
               <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
             </div>
 
-            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
-              <div id="tag_add_conf"></div>
+            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense" mdui-collapse="{accordion: true}">
+              <li class="mdui-list-item">
+                流量出口
+                <div class="mdui-list-item">
+                  <select id="adds_outbound" class="mdui-select mdui-color-transparent">
+                    <option value="">系统默认</option>
+                  </select>
+                </div>
+              </li>
 
               <li class="mdui-list-item">
-                <div class="mdui-list-item mdui-textfield">
-                  <input id="add_conf_name" class="mdui-textfield-input" type="text" />
+                代理协议 (Proxy Protocol)
+                <div class="mdui-list-item">
+                  <select id="adds_proxyprotocol" class="mdui-select mdui-color-transparent">
+                    <option value="0">关闭 (推荐)</option>
+                    <option value="1">v1</option>
+                    <option value="2">v2</option>
+                  </select>
+                </div>
+              </li>
+
+              <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                  <div class="mdui-list-item-content">配置项</div>
+                  <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
                 </div>
 
-                <button id="add_conf"
-                  class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
-                  <i class="mdui-list-item-icon mdui-icon material-icons">add</i>
-                </button>
+                <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                  <div id="tag_adds_conf"></div>
+
+                  <li class="mdui-list-item">
+                    <div class="mdui-list-item mdui-textfield">
+                      <input id="adds_conf_name" class="mdui-textfield-input" type="text" />
+                    </div>
+
+                    <button id="adds_conf"
+                      class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+                      <i class="mdui-list-item-icon mdui-icon material-icons">add</i>
+                    </button>
+                  </li>
+                </ul>
               </li>
+
             </ul>
           </li>
 
@@ -514,46 +647,56 @@
             </ul>
           </li>
 
-          <li class="mdui-list-item">
-            流量出口
-            <div class="mdui-list-item">
-              <select id="edit_outbound" class="mdui-list-item mdui-select mdui-color-transparent">
-                <option value="">系统默认</option>
-              </select>
-            </div>
-          </li>
-
-          <li id="tag_edit_proxyprotocol" class="mdui-list-item">
-            代理协议 (Proxy Protocol)
-            <div class="mdui-list-item">
-              <select id="edit_proxyprotocol" class="mdui-select mdui-color-transparent">
-                <option value="0">关闭 (推荐)</option>
-                <option value="1">v1</option>
-                <option value="2">v2</option>
-              </select>
-            </div>
-          </li>
-
           <div class="mdui-divider"></div>
 
           <li class="mdui-collapse-item">
             <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
-              <div class="mdui-list-item-content">配置项</div>
+              <div class="mdui-list-item-content">高级设置</div>
               <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
             </div>
 
-            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
-              <div id="tag_edit_conf"></div>
+            <ul class="mdui-collapse-item-body mdui-list mdui-list-dense" mdui-collapse="{accordion: true}">
 
               <li class="mdui-list-item">
-                <div class="mdui-list-item mdui-textfield">
-                  <input id="edit_conf_name" class="mdui-textfield-input" type="text" />
+                流量出口
+                <div class="mdui-list-item">
+                  <select id="edit_outbound" class="mdui-select mdui-color-transparent">
+                    <option value="">系统默认</option>
+                  </select>
+                </div>
+              </li>
+
+              <li id="tag_edit_proxyprotocol" class="mdui-list-item">
+                代理协议 (Proxy Protocol)
+                <div class="mdui-list-item">
+                  <select id="edit_proxyprotocol" class="mdui-select mdui-color-transparent">
+                    <option value="0">关闭 (推荐)</option>
+                    <option value="1">v1</option>
+                    <option value="2">v2</option>
+                  </select>
+                </div>
+              </li>
+
+              <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                  <div class="mdui-list-item-content">配置项</div>
+                  <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
                 </div>
 
-                <button id="edit_conf"
-                  class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
-                  <i class="mdui-list-item-icon mdui-icon material-icons">add</i>
-                </button>
+                <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                  <div id="tag_edit_conf"></div>
+
+                  <li class="mdui-list-item">
+                    <div class="mdui-list-item mdui-textfield">
+                      <input id="edit_conf_name" class="mdui-textfield-input" type="text" />
+                    </div>
+
+                    <button id="edit_conf"
+                      class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+                      <i class="mdui-list-item-icon mdui-icon material-icons">add</i>
+                    </button>
+                  </li>
+                </ul>
               </li>
             </ul>
           </li>

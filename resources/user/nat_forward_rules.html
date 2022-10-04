@@ -83,6 +83,7 @@
         </div>
 
         <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+          <li href="/invoices" class="mdui-list-item mdui-ripple">账单</li>
           <li href="/plan" class="mdui-list-item mdui-ripple">我的套餐</li>
           <li href="/cart" class="mdui-list-item mdui-ripple">购买套餐</li>
         </div>
@@ -124,6 +125,7 @@
           <li href="/admin/plans" class="mdui-list-item mdui-ripple">套餐</li>
           <li href="/admin/permissions" class="mdui-list-item mdui-ripple">权限</li>
           <li class="mdui-divider"></li>
+          <li href="/admin/invoices" class="mdui-list-item mdui-ripple">账单</li>
           <li href="/admin/announcements" class="mdui-list-item mdui-ripple">公告</li>
           <li href="/admin/settings" class="mdui-list-item mdui-ripple">设置</li>
         </div>
@@ -191,13 +193,6 @@
                 <i class="mdui-icon material-icons">close</i>
               </button>
             </div>
-          </div>
-
-          <div class="mdui-float-right" mdui-tooltip="{content: '批量添加'}" hidden>
-            <button id="newrules"
-              class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
-              <i class="mdui-icon material-icons">playlist_add</i>
-            </button>
           </div>
 
           <div class="mdui-float-right" mdui-tooltip="{content: '添加'}">
@@ -327,7 +322,7 @@
           <li class="mdui-list-item">
             节点
             <div class="mdui-list-item">
-              <select id="add_node" class="mdui-list-item mdui-select mdui-color-transparent">
+              <select id="add_node" class="mdui-select mdui-color-transparent">
                 <option value="0">请选择</option>
               </select>
             </div>
@@ -341,7 +336,7 @@
           <li class="mdui-list-item">
             协议
             <div class="mdui-list-item">
-              <select id="add_protocol" class="mdui-list-item mdui-select mdui-color-transparent">
+              <select id="add_protocol" class="mdui-select mdui-color-transparent">
                 <option value="none">请选择</option>
                 <option value="tcpudp">TCP+UDP</option>
                 <option value="http">HTTP</option>
@@ -373,7 +368,7 @@
           <li class="mdui-list-item">
             代理协议 (Proxy Protocol)
             <div class="mdui-list-item">
-              <select id="add_proxyprotocol" class="mdui-list-item mdui-select mdui-color-transparent">
+              <select id="add_proxyprotocol" class="mdui-select mdui-color-transparent">
                 <option value="0">关闭 (推荐)</option>
                 <option value="1">v1</option>
                 <option value="2">v2</option>
@@ -384,7 +379,7 @@
           <li class="mdui-list-item">
             内网设备
             <div class="mdui-list-item">
-              <select id="add_dest" class="mdui-list-item mdui-select mdui-color-transparent">
+              <select id="add_dest" class="mdui-select mdui-color-transparent">
               </select>
             </div>
           </li>

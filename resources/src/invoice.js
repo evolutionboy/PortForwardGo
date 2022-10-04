@@ -76,6 +76,9 @@ $("#payment").on('change', function () {
         return;
     }
 
+    $("#progress").removeAttr("style");
+    $("#pay_info").removeAttr("style");
+
     $.ajax({
         method: "GET",
         url: "/ajax/pay/" + payment + "?id=" + invoice_id + extra,
@@ -83,9 +86,9 @@ $("#payment").on('change', function () {
         dataType: "json",
     })
         .done(function (response) {
-            if (response.Ok) {
-                $("#pay_info").removeAttr("style");
+            $("#progress").attr("style", "display: none;");
 
+            if (response.Ok) {
                 if (response.QrCode != null) {
                     $("#qrcode").qrcode({ width: "200", height: "200", foreground: "#000000", text: response.QrCode });
                     $("#qrcode").removeAttr("style");
@@ -100,6 +103,7 @@ $("#payment").on('change', function () {
             }
         })
         .fail(function () {
+            $("#progress").attr("style", "display: none;");
             sendmsg("未能获取服务器数据, 请检查网络是否正常");
         });
 

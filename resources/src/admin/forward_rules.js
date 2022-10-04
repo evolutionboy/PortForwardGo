@@ -186,9 +186,8 @@ function edit_rule(id) {
         }
 
         $("#edit_outbound").html(`<option value="">系统默认</option>`);
-        if (nodes[rule.node_id].outbounds != null && nodes[rule.node_id].outbounds.length > 0) {
-          for (i in nodes[rule.node_id].outbounds) {
-            var outbound = nodes[rule.node_id].outbounds[i];
+        if (nodes[rule.node_id].outbounds != null) {
+          for (outbound in nodes[rule.node_id].outbounds) {
             $("#edit_outbound").append(`<option value="${outbound}">${outbound}</option>`);
           }
         }
@@ -196,7 +195,7 @@ function edit_rule(id) {
         $("#edit_outbound option:selected").removeAttr("selected");
         if (rule.outbound != "") {
           $("#edit_outbound")
-            .find("option[value=" + rule.outbound + "]")
+            .find("option[value='" + rule.outbound + "']")
             .prop("selected", true);
         }
 
@@ -204,7 +203,7 @@ function edit_rule(id) {
           for (key in rule.conf) {
             var html = `
     <li conf="${key}" class="mdui-list-item mdui-row">
-      <div class="mdui-col-xs-3">${key}</div>
+      <div class="mdui-list-item mdui-col-xs-3">${key}</div>
       <div class="mdui-list-item mdui-textfield">
         <input conf="${key}" class="mdui-textfield-input" type="text" />
       </div>
@@ -343,14 +342,15 @@ $("#edit_conf").on("click", function () {
   }
 
   var html = `
-<li conf="${conf}" class="mdui-list-item">${conf}
-  <div class="mdui-list-item mdui-textfield">
-      <input conf="${conf}" class="mdui-textfield-input" type="text" placeholder="127.0.0.1:8080" />
-  </div>
-  <button conf="${conf}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
-      <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
-  </button>
-</li>`;
+  <li conf="${conf}" class="mdui-list-item mdui-row">
+    <div class="mdui-list-item mdui-col-xs-3">${conf}</div>
+    <div class="mdui-list-item mdui-textfield">
+        <input conf="${conf}" class="mdui-textfield-input" type="text" />
+    </div>
+    <button conf="${conf}" class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
+    </button>
+  </li>`;
   $("#tag_edit_conf").append(html);
 
   $(`button[conf="${conf}"]`).on("click", null, conf, function (event) {

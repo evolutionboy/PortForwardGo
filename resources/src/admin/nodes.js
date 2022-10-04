@@ -293,7 +293,7 @@ $("#edit_outbound").on("click", function () {
       <i class="mdui-list-item-icon mdui-icon material-icons">delete</i>
   </button>
 </li>`;
-  $("#tag_edit_targets").append(html);
+  $("#tag_edit_outbounds").append(html);
 
   $(`button[outbound="${i}"]`).on("click", null, i, function (event) {
     $(`li[outbound="${event.data}"]`).remove();
