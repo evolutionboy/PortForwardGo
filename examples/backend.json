@@ -5,7 +5,7 @@
     "ListenIP": "",
     "OutBounds": null,
     "DisableUDP": false,
-    "DisableTFO": false,
+    "DisableTFO": true,
     "DisableExec": false,
     "DNS": [
         "119.29.29.29",
