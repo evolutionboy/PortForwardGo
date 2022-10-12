@@ -41,6 +41,36 @@ $("#add").on("click", function () {
   add.open();
 });
 
+$("#add_plan").on("change", function () {
+  var plan_id = Number($("#add_plan option:selected").val());
+  if (!plan_id) {
+    return;
+  }
+
+  var plan = plans[plan_id];
+  $("#add_permissions option:selected").removeAttr("selected");
+  $("#add_permissions")
+    .find("option[value=" + plan.permission_id + "]")
+    .prop("selected", true);
+
+  if (plan.cycle > 0) {
+    var date = new Date()
+    date.setDate(date.getDate() + plan.cycle)
+    
+    $("#add_resetdate").val(formatDate(date));
+    $("#add_expiredate").val(formatDate(date));
+  }
+
+  $("#add_rule").val(plan.rule);
+  $("#add_nat_rule").val(plan.nat_rule);
+  $("#add_traffic").val((plan.traffic / 1073741824).toFixed());
+  $("#add_speed").val(plan.speed);
+  $("#add_maxconn").val(plan.conn);
+
+  $("#add_price").val(plan.price);
+  $("#add_cycle").val(plan.cycle);
+})
+
 $("#add_enter").on("click", function () {
   var name = $("#add_name").val();
   var username = $("#add_username").val();
@@ -124,7 +154,7 @@ function info_user(user) {
   $("#info_name").html(user.name);
   $("#info_username").html(user.username);
   $("#info_token").html(user.token);
-  if (user.last_ip == null) $("#info_last_ip").html("");else $("#info_last_ip").html(user.last_ip);
+  if (user.last_ip == null) $("#info_last_ip").html(""); else $("#info_last_ip").html(user.last_ip);
   $("#info_last_active").html(user.last_active);
   $("#info_registration_date").html(user.registration_date);
 
@@ -256,6 +286,28 @@ function edit_user(id) {
       sendmsg("请求失败, 请检查网络是否正常");
     });
 }
+
+$("#edit_plan").on("change", function () {
+  var plan_id = Number($("#edit_plan option:selected").val());
+  if (!plan_id) {
+    return;
+  }
+
+  var plan = plans[plan_id];
+  $("#edit_permissions option:selected").removeAttr("selected");
+  $("#edit_permissions")
+    .find("option[value=" + plan.permission_id + "]")
+    .prop("selected", true);
+
+  $("#edit_rule").val(plan.rule);
+  $("#edit_nat_rule").val(plan.nat_rule);
+  $("#edit_traffic").val((plan.traffic / 1073741824).toFixed());
+  $("#edit_speed").val(plan.speed);
+  $("#edit_maxconn").val(plan.conn);
+
+  $("#edit_price").val(plan.price);
+  $("#edit_cycle").val(plan.cycle);
+})
 
 $("#edit_enter").on("click", function () {
   var id = $("#edit_id").html();
