@@ -78,21 +78,23 @@ function load_invoices() {
 }
 
 function pay_invoice(id) {
-    $.ajax({
-        method: "POST",
-        url: "/ajax/admin/invoices",
-        dataType: "json",
-        data: { id: id },
-    })
-        .done(function (response) {
-            if (response.Ok) {
-                sendmsg("操作成功")
-                load_invoices();
-            } else sendmsg(response.Msg);
+    mdui.confirm("补单后无法被恢复", "确认补单", function () {
+        $.ajax({
+            method: "POST",
+            url: "/ajax/admin/invoices",
+            dataType: "json",
+            data: { id: id },
         })
-        .fail(function () {
-            sendmsg("未能获取服务器数据, 请检查网络是否正常");
-        });
+            .done(function (response) {
+                if (response.Ok) {
+                    sendmsg("操作成功")
+                    load_invoices();
+                } else sendmsg(response.Msg);
+            })
+            .fail(function () {
+                sendmsg("未能获取服务器数据, 请检查网络是否正常");
+            });
+    });
 }
 
 

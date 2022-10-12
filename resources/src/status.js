@@ -1,3 +1,4 @@
+var Tips = {};
 var statusCard = new Vue({
     el: '#view',
     data: {
@@ -55,16 +56,8 @@ var statusCard = new Vue({
             return x != "NaN undefined" ? x : 'NaN'
         },
 
-        formatTooltip(server) {
-            var disk = this.formatByteSize(server.State.DiskUsed) + '/' + this.formatByteSize(server.Host.DiskTotal);
-            var upTime = this.secondToDate(server.State.Uptime);
-            var tooltip =
-                `{content: 'System: ${server.Host.Platform}-${server.Host.PlatformVersion}[${server.Host.Arch}]<br>CPU: ${server.Host.CPU}<br>Disk: ${disk}<br>Online: ${upTime}<br>Version: ${server.Host.Version}'}`;
-            return tooltip
-        },
-
-        open_terminal(node_id, session_id) {
-            window.open(`/admin/terminal?id=${node_id}&session=${session_id}`, "_blank");
+        openTerminal(nodeid, session_id) {
+            window.open(`/admin/terminal?id=${nodeid}&session=${session_id}`, "_blank");
         },
     }
 })
@@ -83,6 +76,10 @@ function connect(initial) {
         var data = JSON.parse(event.data)
 
         for (nodeid in data.Nodes) {
+            if (Tips[nodeid] == null) {
+                Tips[nodeid] = {};
+            }
+
             if (statusCard.nodes[nodeid] == null) {
                 load_nodes();
             }
@@ -115,6 +112,34 @@ function connect(initial) {
                 }
 
                 server.live = true
+
+                if ($(`#${nodeid}-${server.SessionId}`).length == 0) continue;
+
+                if (Tips[nodeid][server.SessionId] == null) {
+                    Tips[nodeid][server.SessionId] = {
+                        info: new mdui.Tooltip(`#info-${nodeid}-${server.SessionId}`, {}),
+                        up: new mdui.Tooltip(`#up-${nodeid}-${server.SessionId}`, {}),
+                        down: new mdui.Tooltip(`#down-${nodeid}-${server.SessionId}`, {}),
+                        cpu: new mdui.Tooltip(`#cpu-${nodeid}-${server.SessionId}`, {}),
+                        mem: new mdui.Tooltip(`#mem-${nodeid}-${server.SessionId}`, {}),
+                        swap: new mdui.Tooltip(`#swap-${nodeid}-${server.SessionId}`, {}),
+                        disk: new mdui.Tooltip(`#disk-${nodeid}-${server.SessionId}`, {}),
+                        uptime: new mdui.Tooltip(`#uptime-${nodeid}-${server.SessionId}`, {}),
+                    }
+                }
+
+                if (server.Host.Virtualization == "") server.Host.Virtualization = "未知";
+
+                var tip = Tips[nodeid][server.SessionId];
+                tip.info.$element[0].innerHTML = `系统 ${server.Host.Platform} ${server.Host.PlatformVersion}<br>架构 ${server.Host.Arch}<br>虚拟化 ${server.Host.Virtualization}<br>版本 ${server.Host.Version}`;
+                tip.up.$element[0].innerHTML = "总上传 " + statusCard.readableBytes(server.State.NetInTransfer) + "<br><br>连接数:<br>TCP " + server.State.TcpConnCount + "<br>UDP " + server.State.UdpConnCount;
+                tip.down.$element[0].innerHTML = "总下载 " + statusCard.readableBytes(server.State.NetOutTransfer) + "<br><br>连接数:<br>TCP " + server.State.TcpConnCount + "<br>UDP " + server.State.UdpConnCount;
+                tip.cpu.$element[0].innerHTML = "CPU:<br>" + server.Host.CPU.join("<br>") + "<br><br>平均负载 " + server.State.Load1 + " / " + server.State.Load5 + " / " + server.State.Load15 + "<br>进程数 " + server.State.ProcessCount;
+                tip.mem.$element[0].innerHTML = "内存: " + statusCard.formatByteSize(server.State.MemUsed) + ' / ' + statusCard.formatByteSize(server.Host.MemTotal);
+                tip.swap.$element[0].innerHTML = "Swap: " + statusCard.formatByteSize(server.State.SwapUsed) + ' / ' + statusCard.formatByteSize(server.Host.SwapTotal);
+                tip.disk.$element[0].innerHTML = "储存: " + statusCard.formatByteSize(server.State.DiskUsed) + ' / ' + statusCard.formatByteSize(server.Host.DiskTotal);
+                tip.uptime.$element[0].innerHTML = "启动时间 " + statusCard.formatTimestamp(server.Host.BootTime) + "<br>活动时间 " + statusCard.formatTimestamp(server.Active);
+
             }
         }
 
@@ -175,12 +200,6 @@ $.ajax({
             if (user.permission == 2) {
                 $("#admin_banner").removeAttr("style");
                 statusCard.is_admin = true;
-            }
-
-            if (user.permission_id == 0) {
-                statusCard.nodes = {};
-                done();
-                return;
             }
 
             load_nodes();

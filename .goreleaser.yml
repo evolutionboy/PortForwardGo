@@ -16,7 +16,12 @@ builds:
   - id: PortForwardGoPanel
     main: ./cmd/PortForwardGoPanel
     binary: PortForwardGoPanel
-
+    asmflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    gcflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}}
     env:
       - CGO_ENABLED=0
     goos:
@@ -43,7 +48,12 @@ builds:
   - id: PortForwardGo
     main: ./cmd/PortForwardGo
     binary: PortForwardGo
-
+    asmflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    gcflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}}
     env:
       - CGO_ENABLED=0
     goos:
@@ -75,7 +85,12 @@ builds:
   - id: SecureTunnel
     main: ./cmd/SecureTunnel
     binary: SecureTunnel
-
+    asmflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    gcflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}}
     env:
       - CGO_ENABLED=0
     goos:
@@ -107,7 +122,12 @@ builds:
   - id: RClient
     main: ./cmd/RClient
     binary: RClient
-
+    asmflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    gcflags:
+      - all=-trimpath={{.Env.GOPATH}}
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}}
     env:
       - CGO_ENABLED=0
     goos:

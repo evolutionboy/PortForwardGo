@@ -417,7 +417,7 @@ $("#adds_enter").on("click", function () {
     config[key] = $(this).val();
   });
 
-  var dest = Number($("#add_dest option:selected").val());
+  var dest = Number($("#adds_dest option:selected").val());
   switch (protocol) {
     case "none":
       sendmsg("请填完所有选项");
@@ -436,7 +436,7 @@ $("#adds_enter").on("click", function () {
         return;
       }
 
-      switch ($("#add_dest option:selected").attr("data-type")) {
+      switch ($("#adds_dest option:selected").attr("data-type")) {
         case "node":
           dest_node = dest;
           break;

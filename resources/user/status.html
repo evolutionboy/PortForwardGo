@@ -164,17 +164,17 @@
                   <th class="mdui-text-center"></th>
                   <th class="mdui-text-center">上行</th>
                   <th class="mdui-text-center">下行</th>
-                  <th class="mdui-text-center">上传</th>
-                  <th class="mdui-text-center">下载</th>
                   <th class="mdui-text-center">CPU</th>
                   <th class="mdui-text-center">内存</th>
+                  <th class="mdui-text-center">Swap</th>
+                  <th class="mdui-text-center">储存</th>
                   <th class="mdui-text-center">在线时间</th>
                   <th v-if="is_admin" class="mdui-text-center">操作</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-if="server.live" v-for="server in node.servers">
-                  <td>
+                <tr v-if="server.live" v-for="server in node.servers" :id="nodeid + '-' + server.SessionId">
+                  <td :id="'info-' + nodeid + '-' + server.SessionId">
                     <div class="mdui-valign">
                       <img v-if="server.Host.CountryCode" class="mdui-img-circle mdui-valign"
                         :src="'https://cdn.staticfile.org/flag-icon-css/4.1.5/flags/1x1/' + server.Host.CountryCode + '.svg'"
@@ -183,40 +183,53 @@
                       {{ server.Host.IP }}
                     </div>
                   </td>
-                  <td class="mdui-text-center">
+                  <td :id="'up-' + nodeid + '-' + server.SessionId" class="mdui-text-center">
                     <at>{{ formatNetByteSize(server.State.NetOutSpeed) }}</at>
                   </td>
-                  <td class="mdui-text-center">
+                  <td :id="'down-' + nodeid + '-' + server.SessionId"  class="mdui-text-center">
                     <st>{{ formatNetByteSize(server.State.NetInSpeed) }}</st>
                   </td>
-                  <td class="mdui-text-center">
-                    <at>{{ formatByteSize(server.State.NetOutTransfer) }}</at>
-                  </td>
-                  <td class="mdui-text-center">
-                    <st>{{ formatByteSize(server.State.NetInTransfer) }}</st>
-                  </td>
                   <td class="progress">
-                    <div class="mdui-progress" style="height: 30px; background-color: #edbbd2;">
+                    <div :id="'cpu-' + nodeid + '-' + server.SessionId" class="mdui-progress"
+                      style="height: 30px; background-color: #edbbd2;">
                       <div class="mdui-progress-determinate mdui-color-pink-a400"
                         :style="'width: ' + (server.live?server.State.CPU:'0') + '%;'">
-                        <span class="mdui-text-truncate progress-text">{{ server.live?parseInt(server.State.CPU):'NaN'
-                          }}%</span>
+                        <span class="mdui-text-truncate progress-text">{{ parseInt(server.State.CPU) }}%</span>
                       </div>
                     </div>
                   </td>
                   <td class="progress">
-                    <div class="mdui-progress" style="height: 30px;">
+                    <div :id="'mem-' + nodeid + '-' + server.SessionId" class="mdui-progress" style="height: 30px;">
                       <div class="mdui-progress-determinate mdui-color-indigo-400"
                         :style="'width: ' + parseInt(server.State?server.State.MemUsed/server.Host.MemTotal*100:0) + '%;'">
-                        <span class="mdui-text-truncate progress-text">{{
+                        <span class="mdui-text-truncate  progress-text">{{
                           parseInt(server.State?server.State.MemUsed/server.Host.MemTotal*100:0) }}%</span>
                       </div>
                     </div>
                   </td>
-                  <td class="mdui-text-center">{{ secondToDate(server.State.Uptime) }}</td>
+                  <td class="progress">
+                    <div :id="'swap-' + nodeid + '-' + server.SessionId" class="mdui-progress" style="height: 30px;">
+                      <div class="mdui-progress-determinate mdui-color-indigo-400"
+                        :style="'width: ' + parseInt(server.State?server.State.SwapUsed/server.Host.SwapTotal*100:0) + '%;'">
+                        <span class="mdui-text-truncate  progress-text">{{
+                          parseInt(server.State?server.State.SwapUsed/server.Host.SwapTotal*100:0) }}%</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="progress">
+                    <div :id="'disk-' + nodeid + '-' + server.SessionId" class="mdui-progress" style="height: 30px;">
+                      <div class="mdui-progress-determinate mdui-color-indigo-400"
+                        :style="'width: ' + parseInt(server.State?server.State.DiskUsed/server.Host.DiskTotal*100:0) + '%;'">
+                        <span class="mdui-text-truncate  progress-text">{{
+                          parseInt(server.State?server.State.DiskUsed/server.Host.DiskTotal*100:0) }}%</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td :id="'uptime-' + nodeid + '-' + server.SessionId" class="mdui-text-center">{{
+                    secondToDate(server.State.Uptime) }}</td>
                   <td class="mdui-text-center" v-if="is_admin">
                     <div mdui-tooltip="{content: '终端'}">
-                      <button @click="open_terminal(nodeid, server.SessionId)"
+                      <button @click="openTerminal(nodeid, server.SessionId)"
                         class="mdui-btn mdui-btn-icon mdui-btn-raised mdui-shadow-4 mdui-color-theme mdui-ripple">
                         <i class="mdui-icon material-icons">computer</i>
                       </button>
@@ -244,6 +257,13 @@
     .progress {
       width: 10%;
       min-width: 150px;
+    }
+
+    .progress-text {
+      font-size: 16px;
+      position: relative;
+      top: 4px;
+      left: 6px;
     }
   </style>
 </body>

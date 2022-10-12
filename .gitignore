@@ -349,7 +349,11 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-
 # IDE
 .idea
 .vscode
+
+# Sub Module
+library/quic-go/
+library/lz4/
+library/sqlite3/
