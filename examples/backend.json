@@ -2,6 +2,7 @@
     "Api": "{api}",
     "License": "{license}",
     "Secret": "{secret}",
+    "Proxy": "",
     "ListenIP": "",
     "OutBounds": null,
     "DisableUDP": false,
