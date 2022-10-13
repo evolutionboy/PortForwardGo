@@ -56,7 +56,7 @@ $("#add_plan").on("change", function () {
   if (plan.cycle > 0) {
     var date = new Date()
     date.setDate(date.getDate() + plan.cycle)
-    
+
     $("#add_resetdate").val(formatDate(date));
     $("#add_expiredate").val(formatDate(date));
   }
@@ -384,9 +384,10 @@ $("#edit_cancel").on("click", function () {
 function reset_user(id) {
   mdui.confirm("真的要重置流量吗? ", "确认", function () {
     $.ajax({
-      method: "GET",
-      url: "/ajax/admin/user/resetTraffic?id=" + id,
+      method: "POST",
+      url: "/ajax/admin/user/resetTraffic",
       dataType: "json",
+      data: { id: id },
     })
       .done(function (response) {
         if (response.Ok) {
