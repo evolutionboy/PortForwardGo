@@ -10,5 +10,6 @@
         "SQLite3": {
             "File": "sqlite.db"
         }
-    }
+    },
+    "Proxy": ""
 }

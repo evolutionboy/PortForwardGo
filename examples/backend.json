@@ -3,6 +3,7 @@
     "License": "{license}",
     "Secret": "{secret}",
     "Proxy": "",
+    "Speed": 0,
     "ListenIP": "",
     "OutBounds": null,
     "DisableUDP": false,
