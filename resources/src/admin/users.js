@@ -486,7 +486,7 @@ function load_users() {
               <i class="mdui-icon material-icons">delete</i>
             </span>  
           </td></tr>`;
-          $("#user_list").append(html);
+          $("#user_list").prepend(html);
 
           $(`#info_${user.id}`).on("click", null, user, function (event) {
             info_user(event.data);
@@ -625,7 +625,7 @@ $("#search").keyup(function () {
         <i class="mdui-icon material-icons">delete</i>
       </span>  
     </td></tr>`;
-    $("#user_list").append(html);
+    $("#user_list").prepend(html);
 
     $(`#info_${user.id}`).on("click", null, user, function (event) {
       info_user(event.data);

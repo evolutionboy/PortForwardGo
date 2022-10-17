@@ -29,7 +29,7 @@ $.ajax({
 
                 html += "</tr>"
 
-                $("#invoices-table-body").append(html);
+                $("#invoices-table-body").prepend(html);
             }
             done();
         } else sendmsg(response.Msg);

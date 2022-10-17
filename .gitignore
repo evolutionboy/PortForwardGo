@@ -354,6 +354,8 @@ MigrationBackup/
 .vscode
 
 # Sub Module
+library/pty/conpty
 library/quic-go/
 library/lz4/
 library/sqlite3/
+library/ratelimit/

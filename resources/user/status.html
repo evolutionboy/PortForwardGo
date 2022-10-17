@@ -210,7 +210,7 @@
                   <td class="progress">
                     <div :id="'swap-' + nodeid + '-' + server.SessionId" class="mdui-progress" style="height: 30px;">
                       <div class="mdui-progress-determinate mdui-color-indigo-400"
-                        :style="'width: ' + parseInt(server.State?server.State.SwapUsed/server.Host.SwapTotal*100:0) + '%;'">
+                        :style="'width: ' + parseInt(server.Host.SwapTotal>0&&server.State?server.State.SwapUsed/server.Host.SwapTotal*100:0) + '%;'">
                         <span class="mdui-text-truncate  progress-text">{{
                           parseInt(server.State?server.State.SwapUsed/server.Host.SwapTotal*100:0) }}%</span>
                       </div>

@@ -64,7 +64,7 @@ function load_invoices() {
 
                     html += "</tr>"
 
-                    $("#invoices-table-body").append(html);
+                    $("#invoices-table-body").prepend(html);
 
                     $(`#pay_${invoice.id}`).on("click", null, invoice.id, function (event) {
                         pay_invoice(event.data);

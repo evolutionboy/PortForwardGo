@@ -347,7 +347,7 @@ function load_rules() {
           if (rule.status == "Suspend") {
             html += `<td></td></tr>`;
 
-            $("#rule_list").append(html);
+            $("#rule_list").prepend(html);
             continue;
           }
 
@@ -374,7 +374,7 @@ function load_rules() {
               <i class="mdui-icon material-icons">help_outline</i>
             </span>     
           </td></tr>`;
-          $("#rule_list").append(html);
+          $("#rule_list").prepend(html);
 
           switch (rule.status) {
             case "Active":
@@ -484,7 +484,7 @@ function reload_rules() {
     if (rule.status == "Suspend") {
       html += `<td></td></tr>`;
 
-      $("#rule_list").append(html);
+      $("#rule_list").prepend(html);
       continue;
     }
 
@@ -511,7 +511,7 @@ function reload_rules() {
               <i class="mdui-icon material-icons">help_outline</i>
             </span>     
           </td></tr>`;
-    $("#rule_list").append(html);
+    $("#rule_list").prepend(html);
 
     switch (rule.status) {
       case "Active":
@@ -721,7 +721,6 @@ function debug_rule(id) {
 
             if (response.InBound.Data.MaxConn != 0) $("#debug_inbound").append(`最大连接数 ${response.InBound.Data.MaxConn}<br>`);
             $("#debug_inbound").append(`已连接 ${response.InBound.Data.Connected}<br>`);
-            if (response.InBound.Data.Speed != 0) $("#debug_inbound").append(`峰值速率 ${response.InBound.Data.Speed} Mbps<br>`);
 
             $("#debug_inbound").append(`<br>`);
             $("#debug_inbound").append(`转发目标<br>`);

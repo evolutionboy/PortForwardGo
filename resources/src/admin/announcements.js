@@ -181,7 +181,7 @@ function load_announcements() {
               <i class="mdui-icon material-icons">delete</i>
             </span>
           </td></tr>`;
-          $("#announcement_list").append(html);
+          $("#announcement_list").prepend(html);
 
           $(`#info_${announcement.id}`).on("click", null, announcement, function (event) {
             info_announcement(event.data);
