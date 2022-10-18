@@ -10,6 +10,8 @@ Font_SkyBlue="\033[36m"
 Font_White="\033[37m"
 Font_Suffix="\033[0m"
 
+service_name="RClient"
+
 echo -e "${Font_SkyBlue}RClient installation script${Font_Suffix}"
 
 while [ $# -gt 0 ]; do
@@ -26,10 +28,14 @@ while [ $# -gt 0 ]; do
         secret=$2
         shift
         ;;
+    --service)
+        service_name=$2
+        shift
+        ;;
 
     *)
-         echo -e "${Font_Red} Unknown param: $1 ${Font_Suffix}"
-         exit
+        echo -e "${Font_Red} Unknown param: $1 ${Font_Suffix}"
+        exit
         ;;
     esac
     shift
@@ -47,6 +53,11 @@ fi
 
 if [ -z "${secret}" ]; then
     echo -e "${Font_Red}param 'secret' not found${Font_Suffix}"
+    exit 1
+fi
+
+if [ -z "${service_name}" ]; then
+    echo -e "${Font_Red}param 'service' not found${Font_Suffix}"
     exit 1
 fi
 
@@ -90,16 +101,15 @@ if [[ ! -e "/usr/bin/systemctl" ]] && [[ ! -e "/bin/systemctl" ]]; then
     exit 1
 fi
 
-dir="/opt/RClient"
+while [ -f "/etc/systemd/system/${service_name}.service" ]; do
+    read -p "Service ${service_name} is exists, please input a new service name: " service_name
+done
+
+dir="/opt/${service_name}"
 while [ -d "${dir}" ]; do
     read -p "${dir} is exists, please input a new dir: " dir
 done
 mkdir -p ${dir}
-
-service_name="RClient"
-while [ -f "/etc/systemd/system/${service_name}.service" ]; do
-    read -p "Service ${service_name} is exists, please input a new service name: " service_name
-done
 
 echo -e "${Font_Yellow} ** Checking release info...${Font_Suffix}"
 vers=$(curl -sL https://gitlab.com/api/v4/projects/CoiaPrant%2FPortForwardGo/releases | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | sed 's/\"//g;s/,//g;s/ //g' | awk -F "v" '{print $2}')
@@ -147,7 +157,7 @@ fs.pipe-user-pages-hard = 0
 fs.pipe-user-pages-soft = 0
 
 net.core.default_qdisc=fq
-net.ipv4.tcp_congestion_control=bbr" > /etc/sysctl.d/98-optimize.conf
+net.ipv4.tcp_congestion_control=bbr" >/etc/sysctl.d/98-optimize.conf
 
 echo "* soft nofile 1048576
 * hard nofile 1048576
@@ -156,10 +166,10 @@ echo "* soft nofile 1048576
 * soft core 1048576
 * hard core 1048576
 * hard memlock unlimited
-* soft memlock unlimited" > /etc/security/limits.conf
+* soft memlock unlimited" >/etc/security/limits.conf
 
-sysctl -p > /dev/null 2>&1
-sysctl --system > /dev/null 2>&1
+sysctl -p >/dev/null 2>&1
+sysctl --system >/dev/null 2>&1
 
 echo -e "${Font_Yellow} ** Starting program...${Font_Suffix}"
 systemctl daemon-reload

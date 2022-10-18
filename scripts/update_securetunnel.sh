@@ -10,7 +10,29 @@ Font_SkyBlue="\033[36m"
 Font_White="\033[37m"
 Font_Suffix="\033[0m"
 
+service_name="SecureTunnel"
+
 echo -e "${Font_SkyBlue}SecureTunnel update script${Font_Suffix}"
+
+while [ $# -gt 0 ]; do
+    case $1 in
+    --service)
+        service_name=$2
+        shift
+        ;;
+
+    *)
+        echo -e "${Font_Red} Unknown param: $1 ${Font_Suffix}"
+        exit
+        ;;
+    esac
+    shift
+done
+
+if [ -z "${service_name}" ]; then
+    echo -e "${Font_Red}param 'service' not found${Font_Suffix}"
+    exit 1
+fi
 
 echo -e "${Font_Yellow} ** Checking system info...${Font_Suffix}"
 case $(uname -m) in
@@ -52,14 +74,13 @@ if [[ ! -e "/usr/bin/systemctl" ]] && [[ ! -e "/bin/systemctl" ]]; then
     exit 1
 fi
 
-dir="/opt/SecureTunnel"
-while [ ! -d "${dir}" ]; do
-    read -p "${dir} not exists, please input a new dir: " dir
-done
-
-service_name="SecureTunnel"
 while [ ! -f "/etc/systemd/system/${service_name}.service" ]; do
     read -p "Service ${service_name} not exists, please input a new service name: " service_name
+done
+
+dir="/opt/${service_name}"
+while [ ! -d "${dir}" ]; do
+    read -p "${dir} not exists, please input a new dir: " dir
 done
 
 echo -e "${Font_Yellow} ** Checking release info...${Font_Suffix}"
