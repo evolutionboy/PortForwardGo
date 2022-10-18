@@ -70,7 +70,7 @@ if [ ! -f "/tmp/PortForwardGoPanel" ]; then
 fi
 
 rm -f ${dir}/PortForwardGoPanel
-rm -f ${dir}/resources
+rm -rf ${dir}/resources
 
 chmod 777 /tmp/PortForwardGoPanel
 mv /tmp/PortForwardGoPanel ${dir}
