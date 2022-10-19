@@ -106,7 +106,7 @@ function connect(initial) {
                     continue;
                 }
 
-                if (data.Now - server.Active > 30) {
+                if (data.Now - server.Active > 10) {
                     server.live = false
                     continue;
                 }
