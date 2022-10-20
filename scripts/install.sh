@@ -11,6 +11,7 @@ Font_White="\033[37m"
 Font_Suffix="\033[0m"
 
 service_name="PortForwardGo"
+proxy=""
 
 echo -e "${Font_SkyBlue}PortForwardGo installation script${Font_Suffix}"
 
@@ -30,6 +31,14 @@ while [ $# -gt 0 ]; do
         ;;
     --service)
         service_name=$2
+        shift
+        ;;
+    --proxy)
+        proxy=$2
+        shift
+        ;;
+    --china)
+        proxy="internal"
         shift
         ;;
 
@@ -109,7 +118,6 @@ dir="/opt/${service_name}"
 while [ -d "${dir}" ]; do
     read -p "${dir} is exists, please input a new dir: " dir
 done
-mkdir -p ${dir}
 
 echo -e "${Font_Yellow} ** Checking release info...${Font_Suffix}"
 vers=$(curl -sL https://gitlab.com/api/v4/projects/CoiaPrant%2FPortForwardGo/releases | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | sed 's/\"//g;s/,//g;s/ //g' | awk -F "v" '{print $2}')
@@ -143,12 +151,14 @@ if [ ! -f "/tmp/examples/backend.json" ]; then
     exit 1
 fi
 
+mkdir -p ${dir}
 chmod 777 /tmp/PortForwardGo
 mv /tmp/PortForwardGo ${dir}
 
 sed -i "s#{api}#${api}#g" /tmp/examples/backend.json
 sed -i "s#{secret}#${secret}#g" /tmp/examples/backend.json
 sed -i "s#{license}#${license}#g" /tmp/examples/backend.json
+sed -i "s#{proxy}#${proxy}#g" /tmp/examples/backend.json
 mv /tmp/examples/backend.json ${dir}
 
 mv /tmp/systemd/PortForwardGo.service /etc/systemd/system/${service_name}.service

@@ -67,7 +67,6 @@ dir="/opt/${service_name}"
 while [ -d "${dir}" ]; do
     read -p "${dir} is exists, please input a new dir: " dir
 done
-mkdir -p ${dir}
 
 echo -e "${Font_Yellow} ** Checking release info...${Font_Suffix}"
 vers=$(curl -sL https://gitlab.com/api/v4/projects/CoiaPrant%2FPortForwardGo/releases | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | sed 's/\"//g;s/,//g;s/ //g' | awk -F "v" '{print $2}')
@@ -101,6 +100,7 @@ if [ ! -f "/tmp/examples/panel.json" ]; then
     exit 1
 fi
 
+mkdir -p ${dir}
 chmod 777 /tmp/PortForwardGoPanel
 mv /tmp/PortForwardGoPanel ${dir}
 mv /tmp/examples/panel.json ${dir}

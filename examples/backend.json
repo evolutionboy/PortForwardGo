@@ -2,7 +2,7 @@
     "Api": "{api}",
     "License": "{license}",
     "Secret": "{secret}",
-    "Proxy": "",
+    "Proxy": "{proxy}",
     "Speed": 0,
     "ListenIP": "",
     "OutBounds": null,
