@@ -288,7 +288,7 @@ function load_permissions() {
           var permission = response.Data[i];
           permissions[permission.id] = permission;
 
-          if (search != "" && permission.name.indexOf(search) == -1) continue;
+          if (search != "" && permission.name.indexOf(search) == -1 && String(permission.id).indexOf(search) == -1) continue;
 
           var html = `<tr>
           <td>${permission.id}</td>
@@ -335,7 +335,7 @@ $("#search").keyup(function () {
   for (id in permissions) {
     var permission = permissions[id]
 
-    if (search != "" && permission.name.indexOf(search) == -1) continue;
+    if (search != "" && permission.name.indexOf(search) == -1 && String(permission.id).indexOf(search) == -1) continue;
 
     var html = `<tr>
       <td>${permission.id}</td>

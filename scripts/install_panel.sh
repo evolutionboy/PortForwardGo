@@ -105,6 +105,7 @@ chmod 777 /tmp/PortForwardGoPanel
 mv /tmp/PortForwardGoPanel ${dir}
 mv /tmp/examples/panel.json ${dir}
 mv /tmp/resources ${dir}
+mv /tmp/install ${dir}
 
 mv /tmp/systemd/PortForwardGoPanel.service /etc/systemd/system/${service_name}.service
 sed -i "s#{dir}#${dir}#g" /etc/systemd/system/${service_name}.service
@@ -113,6 +114,6 @@ rm -rf /tmp/*
 
 echo -e "${Font_Yellow} ** Starting program...${Font_Suffix}"
 systemctl daemon-reload
-systemctl enable ${service_name}
+systemctl enable --now ${service_name}
 
 echo -e "${Font_Green} [Success] Completed installation${Font_Suffix}"

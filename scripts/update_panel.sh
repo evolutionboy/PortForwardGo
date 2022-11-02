@@ -92,10 +92,12 @@ fi
 
 rm -f ${dir}/PortForwardGoPanel
 rm -rf ${dir}/resources
+rm -rf ${dir}/install
 
 chmod 777 /tmp/PortForwardGoPanel
 mv /tmp/PortForwardGoPanel ${dir}
 mv /tmp/resources ${dir}
+mv /tmp/install ${dir}
 
 rm -rf /tmp/*
 

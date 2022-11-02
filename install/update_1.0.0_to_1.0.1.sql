@@ -7,7 +7,7 @@ SET
 START TRANSACTION;
 
 SET
-  time_zone = "+00:00";
+  time_zone = "+08:00";
 
 CREATE TABLE `invoices` (
   `id` int(11) NOT NULL,

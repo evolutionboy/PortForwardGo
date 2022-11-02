@@ -1,12 +1,12 @@
 {
     "Web": {
         "Type": "unix",
-        "Listen": "/var/run/pf.socket"
+        "Listen": "/data/web.socket"
     },
     "Database": {
         "Type": "sqlite3",
         "SQLite3": {
-            "File": "sqlite.db"
+            "File": "/data/sqlite.db"
         }
     },
     "Proxy": ""

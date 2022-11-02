@@ -128,6 +128,11 @@ $("#add_node").on("change", function () {
     $("#add_nodeinfo").append("保留目标端口 " + nodes[node].reseved_target_ports.replaceAll("\n", ","))
   }
 
+  if (nodes[node].icp) {
+    $("#add_nodeinfo").append("<br>");
+    $("#add_nodeinfo").append("此节点HTTP/HTTPS转发需要备案域名")
+  }
+
   if (nodes[node].tls_verify) {
     $("#add_nodeinfo").append("<br>");
     $("#add_nodeinfo").append("此节点所有TLS流量需要可信证书")
@@ -135,7 +140,7 @@ $("#add_node").on("change", function () {
 
   if (nodes[node].tls_verify_host) {
     $("#add_nodeinfo").append("<br>");
-    $("#add_nodeinfo").append("此节点TLS HOST需要可信证书")
+    $("#add_nodeinfo").append("此节点HTTPS转发需要可信证书")
   }
 
   if (nodes[node].blocked_protocol != "") {
@@ -540,7 +545,7 @@ function load_rules() {
           var rule = response.Data[id];
           rules[rule.id] = rule
 
-          if (search != "" && rule.name.indexOf(search) == -1) continue;
+          if (search != "" && rule.name.indexOf(search) == -1 && String(rule.id).indexOf(search) == -1) continue;
           if (view_node != 0 && rule.node_id != view_node) continue;
           if (rule.targets == null) rule.targets = [];
 
@@ -676,7 +681,7 @@ function reload_rules() {
     var rule = rules[id];
     rules[rule.id] = rule
 
-    if (search != "" && rule.name.indexOf(search) == -1) continue;
+    if (search != "" && rule.name.indexOf(search) == -1 && String(rule.id).indexOf(search) == -1) continue;
     if (view_node != 0 && rule.node_id != view_node) continue;
     if (rule.targets == null) rule.targets = [];
 

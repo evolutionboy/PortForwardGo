@@ -6,6 +6,7 @@ var Edit = new mdui.Dialog("#editDevice");
 $("#add").on("click", function () {
   $("#add_name").val("");
   $("#add_ips").val("");
+  $("#add_mode option:selected").removeAttr("selected");
   $("#add_secure_port").val("");
   $("#add_securex_port").val("");
   $("#add_tls_port").val("");
@@ -20,6 +21,7 @@ $("#add").on("click", function () {
 $("#add_enter").on("click", function () {
   var name = $("#add_name").val();
   var ips = $("#add_ips").val();
+  var mode = Number($("#add_mode option:selected").val());
 
   var secure_port = Number($("#add_secure_port").val());
   var securex_port = Number($("#add_securex_port").val());
@@ -39,6 +41,7 @@ $("#add_enter").on("click", function () {
     data: JSON.stringify({
       name: name,
       ips: ips,
+      mode: mode,
 
       secure_port: secure_port,
       securex_port: securex_port,
@@ -75,6 +78,10 @@ function edit_device(id) {
 
         $("#edit_name").val(device.name);
         $("#edit_ips").val(device.ips);
+        $("#edit_mode")
+        .find("option[value=" + device.mode + "]")
+        .prop("selected", true);
+
         $("#edit_secure_port").val(device.secure_port);
         $("#edit_securex_port").val(device.securex_port);
         $("#edit_tls_port").val(device.tls_port);
@@ -100,6 +107,7 @@ $("#edit_enter").on("click", function () {
 
   var name = $("#edit_name").val();
   var ips = $("#edit_ips").val();
+  var mode = Number($("#edit_mode option:selected").val());
 
   var secure_port = Number($("#edit_secure_port").val());
   var securex_port = Number($("#edit_securex_port").val());
@@ -119,6 +127,7 @@ $("#edit_enter").on("click", function () {
     data: JSON.stringify({
       name: name,
       ips: ips,
+      mode: mode,
 
       secure_port: secure_port,
       securex_port: securex_port,
@@ -128,7 +137,7 @@ $("#edit_enter").on("click", function () {
   })
     .done(function (response) {
       if (response.Ok) {
-        sendmsg("添加成功");
+        sendmsg("修改成功");
         Edit.close();
         load_devices();
       } else sendmsg(response.Msg);

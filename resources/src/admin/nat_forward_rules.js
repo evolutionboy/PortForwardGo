@@ -296,7 +296,7 @@ function load_rules() {
           var rule = response.Data[id];
           rules[rule.id] = rule
 
-          if (search != "" && rule.name.indexOf(search) == -1) continue;
+          if (search != "" && rule.name.indexOf(search) == -1 && String(rule.id).indexOf(search) == -1) continue;
           if (view_node != 0 && rule.node_id != view_node) continue;
           if (rule.targets == null) rule.targets = [];
 
@@ -433,7 +433,7 @@ function reload_rules() {
     var rule = rules[id];
     rules[rule.id] = rule
 
-    if (search != "" && rule.name.indexOf(search) == -1) continue;
+    if (search != "" && rule.name.indexOf(search) == -1 && String(rule.id).indexOf(search) == -1) continue;
     if (view_node != 0 && rule.node_id != view_node) continue;
     if (rule.targets == null) rule.targets = [];
 

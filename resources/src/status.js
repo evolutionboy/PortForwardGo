@@ -1,3 +1,13 @@
+var protocol = {
+    tcpudp: "TCP+UDP",
+    http: "HTTP",
+    https: "HTTPS",
+    host: "TLS HOST",
+    secure: "Secure隧道",
+    securex: "SecureX隧道",
+    tls: "TLS隧道",
+};
+
 var Tips = {};
 var statusCard = new Vue({
     el: '#view',
@@ -175,6 +185,91 @@ function load_nodes() {
                             name: node.name,
                             servers: [],
                         });
+
+                        var protocols = [];
+                        {
+                            var _protocols = node.protocol.split("|")
+                            for (i in _protocols) {
+                                var p = _protocols[i];
+                                protocols.push(protocol[p])
+                            }
+                        }
+
+                        var nat_protocols = [];
+                        {
+                            var _protocols = node.nat_protocol.split("|")
+                            for (i in _protocols) {
+                                var p = _protocols[i];
+                                nat_protocols.push(protocol[p])
+                            }
+                        }
+
+                        var html = "";
+                        html += "倍率 " + node.traffic;
+                        html += "<br>"
+
+                        html += "速率 " + node.speed;
+                        html += "<br>"
+                        html += "<br>"
+
+                        html += "转发协议 " + protocols.join(",");
+                        html += "<br>"
+
+                        html += "穿透协议 " + nat_protocols.join(",");
+                        html += "<br>"
+
+                        html += "端口范围 " + node.port_range;
+                        html += "<br>"
+
+                        if (node.reseved_ports != "") {
+                            html += "保留端口 " + node.reseved_ports.replaceAll("\n", ",")
+                            html += "<br>"
+                        }
+
+                        if (node.reseved_target_ports != "") {
+                            html += "保留目标端口 " + node.reseved_target_ports.replaceAll("\n", ",")
+                            html += "<br>"
+                        }
+
+                        if (node.icp) {
+                            html += "此节点HTTP/HTTPS转发需要备案域名"
+                            html += "<br>"
+                        }
+
+                        if (node.tls_verify) {
+                            html += "此节点所有TLS流量需要可信证书"
+                            html += "<br>"
+                        }
+
+                        if (node.tls_verify_host) {
+                            html += "此节点 HTTPS / TLS HOST 转发需要可信证书"
+                            html += "<br>"
+                        }
+
+                        if (node.blocked_protocol != "") {
+                            html += "屏蔽协议 " + node.blocked_protocol
+                            html += "<br>"
+                        }
+
+                        if (node.blocked_hostname != "") {
+                            html += "屏蔽SNI " + node.blocked_hostname
+                            html += "<br>"
+                        }
+
+                        if (node.blocked_path != "") {
+                            html += "屏蔽Path " + node.blocked_path
+                            html += "<br>"
+                        }
+
+                        if (node.note != "") {
+                            html += "<br>"
+                            html += "说明 " + node.note
+                        }
+
+                        setTimeout(function (nodeid, html) {
+                            new mdui.Tooltip(`#info_${nodeid}`, { content: html })
+                            return;
+                        }, 1000, node.id, html)
                     } else {
                         statusCard.nodes[node.id].name = node.name;
                     }

@@ -45,7 +45,7 @@
             }));
 
             var msg = new Int8Array(resizeMessage.length);
-            msg.set(resizeMessage, prefix.length);
+            msg.set(resizeMessage);
 
             socket.send(msg)
         }

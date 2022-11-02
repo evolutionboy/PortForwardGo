@@ -7,7 +7,7 @@
   <title>转发管理</title>
   <link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/mdui/1.0.2/css/mdui.min.css" />
   <link rel="stylesheet" href="/src/global.css" />
-  <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/mdui/1.0.2/js/mdui.min.js"></script>
 </head>
 
@@ -155,6 +155,12 @@
     <div id="base" class="mdui-container">
       <ul class="mdui-list" mdui-collapse="{accordion: true}">
         <li class="mdui-list-item">
+          版本号
+          <div id="version" class="mdui-list-item">
+          </div>
+        </li>
+
+        <li class="mdui-list-item">
           系统链接
           <div class="mdui-list-item mdui-textfield">
             <input id="system_url" class="mdui-textfield-input" type="text" placeholder="https://example.com" />
@@ -235,6 +241,7 @@
           <a href="#whmcs" class="mdui-ripple mdui-ripple-white">WHMCS</a>
           <a href="#alipay_qr" class="mdui-ripple mdui-ripple-white">支付宝当面付</a>
           <a href="#epay" class="mdui-ripple mdui-ripple-white">易支付</a>
+          <a href="#mgate" class="mdui-ripple mdui-ripple-white">MGate</a>
           <a href="#usdt_trc20" class="mdui-ripple mdui-ripple-white">USDT TRC20</a>
         </div>
       </div>
@@ -414,6 +421,62 @@
 
         <div class="mdui-float-left" mdui-tooltip="{content: '保存设置'}" style="padding: 0 16px;">
           <button id="epay_save" class="mdui-btn mdui-btn-icon mdui-color-theme mdui-ripple">
+            <i class="mdui-icon material-icons">check</i>
+          </button>
+        </div>
+      </div>
+
+      <div id="mgate" class="mdui-container">
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+          <li class="mdui-list-item">
+            启用
+            <label class="mdui-list-item mdui-switch">
+              <input name="enable" payment="mgate" type="checkbox" />
+              <i class="mdui-switch-icon"></i>
+            </label>
+          </li>
+
+          <li class="mdui-list-item">
+            显示名称
+            <div class="mdui-list-item mdui-textfield">
+              <input name="display" payment="mgate" class="mdui-textfield-input" type="text" />
+            </div>
+          </li>
+
+          <li class="mdui-list-item">
+            手续费
+            <div class="mdui-list-item mdui-textfield">
+              <input name="fee" payment="mgate" class="mdui-textfield-input" type="number" min="0" step="0.01"
+                placeholder="0.05" />
+            </div>
+            <small>1%就是0.01</small>
+          </li>
+
+          <li class="mdui-list-item">
+            接口地址
+            <div class="mdui-list-item mdui-textfield">
+              <input name="api" payment="mgate" class="mdui-textfield-input" type="text"
+                placeholder="https://example.com" />
+            </div>
+          </li>
+
+          <li class="mdui-list-item">
+            App Id
+            <div class="mdui-list-item mdui-textfield">
+              <input name="app_id" payment="mgate" class="mdui-textfield-input" type="text" />
+            </div>
+          </li>
+
+          <li class="mdui-list-item">
+            App Secret
+            <div class="mdui-list-item mdui-textfield">
+              <input name="app_secret" payment="mgate" class="mdui-textfield-input" type="text" />
+            </div>
+          </li>
+        </ul>
+
+        <div class="mdui-float-left" mdui-tooltip="{content: '保存设置'}" style="padding: 0 16px;">
+          <button id="mgate_save" class="mdui-btn mdui-btn-icon mdui-color-theme mdui-ripple">
             <i class="mdui-icon material-icons">check</i>
           </button>
         </div>

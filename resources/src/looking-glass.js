@@ -303,10 +303,10 @@ function iperf3(node_id, outbound, host, port, parallel, reverse, udp, ipv6) {
 
         if (!response.Ok) {
             if (udp) {
-                $("#iperf3-udp-table-body").append('<tr><td colspan="7" class="text-center">错误: ' + response
+                $("#iperf3-udp-table-body").append('<tr><td colspan="7" class="text-center">' + response
                     .Data + '</td></tr>');
             } else {
-                $("#iperf3-table-body").append('<tr><td colspan="7" class="text-center">错误: ' + response
+                $("#iperf3-table-body").append('<tr><td colspan="7" class="text-center">' + response
                     .Data + '</td></tr>');
             }
             finished();

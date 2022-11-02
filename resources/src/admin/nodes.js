@@ -21,6 +21,7 @@ $("#add").on("click", function () {
 
   $("#add_addr").val("");
   $("#add_ips").val("");
+  $("#add_mode option:selected").removeAttr("selected");
   $("#add_traffic").val("");
   $("#add_speed").val("");
 
@@ -70,6 +71,7 @@ $("#add_enter").on("click", function () {
   var name = $("#add_name").val();
   var addr = $("#add_addr").val();
   var assign_ips = $("#add_ips").val();
+  var mode = Number($("#add_mode option:selected").val());
   var traffic = Number($("#add_traffic").val());
   var speed = Number($("#add_speed").val());
 
@@ -100,9 +102,9 @@ $("#add_enter").on("click", function () {
     if (item.checked) nat_protocol.push($(this).attr("protocol"))
   });
 
-  var permissions = [];
+  var permission = [];
   $("input[type=checkbox][data-type=add-permissions]").each(function (_, item) {
-    if (item.checked) permissions.push(Number($(this).attr("data-permission")))
+    if (item.checked) permission.push(Number($(this).attr("data-permission")))
   });
 
   var sni = $("#add_sni").val();
@@ -136,6 +138,7 @@ $("#add_enter").on("click", function () {
 
       addr: addr,
       assign_ips: assign_ips,
+      mode: mode,
       traffic: traffic,
       speed: speed,
 
@@ -165,7 +168,7 @@ $("#add_enter").on("click", function () {
       reseved_target_port: reseved_target_port,
       note: note,
 
-      permissions: permissions,
+      permissions: permission,
     }),
   })
     .done(function (response) {
@@ -191,6 +194,18 @@ function info_node(node) {
 
   $("#info_addr").html(node.addr);
   $("#info_ips").html(node.assign_ips);
+  switch (node.mode) {
+    case 1:
+      $("#info_mode").html("负载均衡");
+      break;
+    case 2:
+      $("#info_mode").html("故障转移");
+      break;
+    default:
+      $("#info_mode").html("负载均衡");
+      break;
+  }
+
   $("#info_secret").html(node.secret);
   if (node.updated == "0001-01-01") $("#info_updated").html("无"); else $("#info_updated").html(node.updated);
   $("#info_traffic").html(node.traffic);
@@ -319,6 +334,9 @@ function edit_node(id) {
 
         $("#edit_addr").val(node.addr);
         $("#edit_ips").val(node.assign_ips);
+        $("#edit_mode")
+          .find("option[value=" + node.mode + "]")
+          .prop("selected", true);
         $("#edit_traffic").val(node.traffic);
         $("#edit_speed").val(node.speed);
 
@@ -391,7 +409,7 @@ function edit_node(id) {
 
         mdui.mutation()
         mdui.updateTextFields()
-        
+
         edit.open();
       } else sendmsg(response.Msg);
     })
@@ -406,6 +424,7 @@ $("#edit_enter").on("click", function () {
 
   var addr = $("#edit_addr").val();
   var assign_ips = $("#edit_ips").val();
+  var mode = Number($("#edit_mode option:selected").val());
   var traffic = Number($("#edit_traffic").val());
   var speed = Number($("#edit_speed").val());
 
@@ -446,9 +465,9 @@ $("#edit_enter").on("click", function () {
     if (item.checked) nat_protocol.push($(this).attr("protocol"))
   });
 
-  var permissions = [];
+  var permission = [];
   $("input[type=checkbox][data-type=edit-permissions]").each(function (_, item) {
-    if (item.checked) permissions.push(Number($(this).attr("data-permission")))
+    if (item.checked) permission.push(Number($(this).attr("data-permission")))
   });
 
   var sni = $("#edit_sni").val();
@@ -476,6 +495,7 @@ $("#edit_enter").on("click", function () {
 
       addr: addr,
       assign_ips: assign_ips,
+      mode: mode,
       traffic: traffic,
       speed: speed,
 
@@ -505,13 +525,14 @@ $("#edit_enter").on("click", function () {
       reseved_target_port: reseved_target_port,
       note: note,
 
-      permissions: permissions,
+      permissions: permission,
     }),
   })
     .done(function (response) {
       if (response.Ok) {
         sendmsg(response.Msg);
         edit.close();
+        load_permissions();
         load_nodes();
       } else sendmsg(response.Msg);
     })
@@ -551,7 +572,7 @@ function update_node(id) {
       dataType: "json",
     })
       .done(function (response) {
-          sendmsg(response.Msg)
+        sendmsg(response.Msg)
       })
       .fail(function () {
         sendmsg("请求失败, 请检查网络是否正常");
@@ -599,7 +620,7 @@ function load_nodes() {
           var node = response.Data[i];
           nodes[node.id] = node;
 
-          if (search != "" && node.name.indexOf(search) == -1) continue;
+          if (search != "" && node.name.indexOf(search) == -1 && String(node.id).indexOf(search) == -1) continue;
 
           if (node.updated == "0001-01-01 00:00") node.updated = "无";
 
@@ -659,6 +680,8 @@ function load_nodes() {
 
 function load_permissions() {
   permissions = [];
+  $("#tag_add_permissions").empty();
+  $("#tag_edit_permissions").empty();
 
   $.ajax({
     method: "GET",
@@ -707,7 +730,7 @@ $("#search").keyup(function () {
   for (id in nodes) {
     var node = nodes[id]
 
-    if (search != "" && node.name.indexOf(search) == -1) continue;
+    if (search != "" && node.name.indexOf(search) == -1 && String(node.id).indexOf(search) == -1) continue;
 
     if (node.updated == "0001-01-01 00:00") node.updated = "无";
 

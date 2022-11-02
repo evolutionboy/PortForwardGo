@@ -92,7 +92,7 @@ $("#edit_enter").on("click", function () {
   })
     .done(function (response) {
       if (response.Ok) {
-        sendmsg("添加成功");
+        sendmsg("修改成功");
         Edit.close();
         load_devices();
       } else sendmsg(response.Msg);

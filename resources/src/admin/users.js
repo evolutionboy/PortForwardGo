@@ -155,7 +155,7 @@ function info_user(user) {
   $("#info_username").html(user.username);
   $("#info_token").html(user.token);
   if (user.last_ip == null) $("#info_last_ip").html(""); else $("#info_last_ip").html(user.last_ip);
-  $("#info_last_active").html(user.last_active);
+  if (user.last_active == "0001-01-01") $("#info_last_active").html(""); else $("#info_last_active").html(user.last_active);
   $("#info_registration_date").html(user.registration_date);
 
   if (user.plan_id == 0) $("#info_plan").html("无"); else $("#info_plan").html(user.plan_id + " | " + plans[user.plan_id].name);
@@ -436,7 +436,7 @@ function load_users() {
           var user = response.Data[id];
           users[user.id] = user
 
-          if (search != "" && user.username.indexOf(search) == -1) continue;
+          if (search != "" && user.username.indexOf(search) == -1 && String(user.id).indexOf(search) == -1) continue;
 
           var html = `<tr>
             <td>${user.id}</td>
@@ -575,7 +575,7 @@ $("#search").keyup(function () {
   for (id in users) {
     var user = users[id]
 
-    if (search != "" && user.username.indexOf(search) == -1) continue;
+    if (search != "" && user.username.indexOf(search) == -1 && String(user.id).indexOf(search) == -1) continue;
 
     var html = `<tr>
       <td>${user.id}</td>

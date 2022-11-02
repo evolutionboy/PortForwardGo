@@ -1,7 +1,7 @@
 @echo off
 set UserName=CoiaPrant
 set Name=PortForwardGo
-set Version=1.0.5
+set Version=1.0.6
 
 if exist dist (
     del /F /S /Q dist > NUL
@@ -16,7 +16,7 @@ if not exist .git (
 )
 
 go mod tidy
-git add .gitignore .goreleaser.yml Dockerfile build.bat examples resources systemd scripts README.md LICENSE
+git add .gitignore .goreleaser.yml build.bat examples resources systemd docker install scripts README.md LICENSE
 git commit -m "v%Version%"
 git push -u origin master
 git tag -a v%Version% -m "release v%Version%"

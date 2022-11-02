@@ -147,6 +147,40 @@ $("#epay_save").on("click", function () {
     });
 });
 
+$("#mgate_save").on("click", function () {
+  var enable = String($("[payment=mgate][name=enable]").prop("checked"));
+  var display = $("[payment=mgate][name=display]").val()
+  var fee = String(Number($("[payment=mgate][name=fee]").val()).toFixed(2))
+  var api = $("[payment=mgate][name=api]").val()
+  var app_id = $("[payment=mgate][name=app_id]").val()
+  var app_secret = $("[payment=mgate][name=app_secret]").val()
+
+  if ((enable == "true") && (!display || !api || !app_id || !app_secret)) {
+    sendmsg("请填写完全部内容或关闭当前支付方式");
+    return;
+  }
+
+  $.ajax({
+    method: "POST",
+    url: "/ajax/admin/settings/payments?type=mgate",
+    dataType: "json",
+    contentType: "application/json",
+    data: JSON.stringify({
+      enable: enable,
+      display: display,
+      fee: fee,
+      api: api,
+      app_id: app_id,
+      app_secretkey: app_secret,
+    }),
+  })
+    .done(function (response) {
+      sendmsg(response.Msg);
+    })
+    .fail(function () {
+      sendmsg("请求失败, 请检查网络是否正常");
+    });
+});
 
 $("#usdt_trc20_save").on("click", function () {
   var enable = String($("[payment=usdt_trc20][name=enable]").prop("checked"));
@@ -189,6 +223,7 @@ $.ajax({
 })
   .done(function (response) {
     if (response.Ok) {
+      $("#version").html(response.Data.version);
       $("#system_url").val(response.Data.system_url);
       $("#license").val(response.Data.license);
       $("#secure_key").val(response.Data.secure_key);
@@ -239,6 +274,13 @@ $.ajax({
             if (methods.indexOf("alipay") != -1) {
               $("[payment=epay][method=alipay]").prop("checked", true);
             }
+
+            $("[payment=mgate][name=enable]").attr('checked', response.Data.mgate.enable == "true");
+            $("[payment=mgate][name=display]").val(response.Data.mgate.display);
+            $("[payment=mgate][name=fee]").val(response.Data.mgate.fee);
+            $("[payment=mgate][name=api]").val(response.Data.mgate.api);
+            $("[payment=mgate][name=app_id]").val(response.Data.mgate.app_id);
+            $("[payment=mgate][name=app_secret]").val(response.Data.mgate.app_secret);
 
             $("[payment=usdt_trc20][name=enable]").attr('checked', response.Data.usdt_trc20.enable == "true");
             $("[payment=usdt_trc20][name=display]").val(response.Data.usdt_trc20.display);

@@ -165,7 +165,7 @@ function load_announcements() {
           var announcement = response.Data[i];
           announcements[announcement.id] = announcement;
 
-          if (search != "" && announcement.title.indexOf(search) == -1) continue;
+          if (search != "" && announcement.title.indexOf(search) == -1 && String(announcement.id).indexOf(search) == -1) continue;
 
           var html = `<tr>
             <td>${announcement.id}</td>
@@ -210,7 +210,7 @@ $("#search").keyup(function () {
   for (id in announcements) {
     var announcement = announcements[id]
 
-    if (search != "" && announcement.title.indexOf(search) == -1) continue;
+    if (search != "" && announcement.title.indexOf(search) == -1 && String(announcement.id).indexOf(search) == -1) continue;
 
     var html = `<tr>
     <td>${announcement.id}</td>

@@ -12,6 +12,7 @@ Font_Suffix="\033[0m"
 
 service_name="PortForwardGo"
 proxy=""
+listen=""
 
 echo -e "${Font_SkyBlue}PortForwardGo installation script${Font_Suffix}"
 
@@ -37,11 +38,14 @@ while [ $# -gt 0 ]; do
         proxy=$2
         shift
         ;;
-    --china)
-        proxy="internal"
+    --listen)
+        listen=$2
         shift
         ;;
-
+    --china)
+        proxy="internal"
+        listen="auto"
+        ;;
     *)
         echo -e "${Font_Red} Unknown param: $1 ${Font_Suffix}"
         exit
@@ -110,6 +114,38 @@ if [[ ! -e "/usr/bin/systemctl" ]] && [[ ! -e "/bin/systemctl" ]]; then
     exit 1
 fi
 
+if [[ "${listen}" == "auto" ]]; then
+    listen=""
+
+    default_out_ip=$(curl -4sL --connect-timeout 1 myip.ipip.net | awk '{print $2}' | awk -F ： '{print $2}')
+    default_in_ip="${default_out_ip}"
+
+    bind_ips=$(ip address show | grep inet | grep -v inet6 | grep -v host | grep -v docker | grep -v tun | grep -v tap | awk '{print $2}' | awk -F "/" '{print $1}')
+    for bind_ip in ${bind_ips[@]}; do
+        out_ip=$(curl -4sL --connect-timeout 1 --interface ${bind_ip} myip.ipip.net | awk '{print $2}' | awk -F ： '{print $2}')
+        if [[ -z "${out_ip}" ]]; then
+            continue
+        fi
+
+        echo -e "${Font_SkyBlue}网卡绑定IP ${bind_ip} 外网IP ${out_ip}${Font_Suffix}"
+
+        if [[ "${out_ip}" != "${default_out_ip}" ]]; then
+            default_in_ip="${out_ip}"
+            listen="${bind_ip}"
+        fi
+    done
+
+    echo ""
+
+    if [[ -z "${listen}" ]]; then
+        echo -e "${Font_Green}未获取到入口IP 可能是单IP机器${Font_Suffix}"
+        echo -e "${Font_Green}外网IP ${default_out_ip}${Font_Suffix}"
+    else
+        echo -e "${Font_Green}入口绑定IP ${listen} 外网IP ${default_in_ip}${Font_Suffix}"
+        echo -e "${Font_Green}出口外网IP ${default_out_ip}${Font_Suffix}"
+    fi
+fi
+
 while [ -f "/etc/systemd/system/${service_name}.service" ]; do
     read -p "Service ${service_name} is exists, please input a new service name: " service_name
 done
@@ -159,6 +195,7 @@ sed -i "s#{api}#${api}#g" /tmp/examples/backend.json
 sed -i "s#{secret}#${secret}#g" /tmp/examples/backend.json
 sed -i "s#{license}#${license}#g" /tmp/examples/backend.json
 sed -i "s#{proxy}#${proxy}#g" /tmp/examples/backend.json
+sed -i "s#{listen}#${listen}#g" /tmp/examples/backend.json
 mv /tmp/examples/backend.json ${dir}
 
 mv /tmp/systemd/PortForwardGo.service /etc/systemd/system/${service_name}.service

@@ -222,6 +222,24 @@ $("#edit_cancel").on("click", function () {
   edit.close();
 });
 
+function sync_plan(id) {
+  mdui.confirm("同步后无法被恢复", "确认同步", function () {
+    $.ajax({
+      method: "GET",
+      url: "/ajax/admin/plan/sync?id=" + id,
+      dataType: "json",
+    })
+      .done(function (response) {
+        if (response.Ok) {
+          sendmsg("同步成功");
+        } else sendmsg(response.Msg);
+      })
+      .fail(function () {
+        sendmsg("请求失败, 请检查网络是否正常");
+      });
+  });
+}
+
 function delete_plan(id) {
   mdui.confirm("删除后无法被恢复", "确认删除", function () {
     $.ajax({
@@ -257,7 +275,7 @@ function load_plans() {
           var plan = response.Data[i];
           plans[plan.id] = plan;
 
-          if (search != "" && plan.name.indexOf(search) == -1) continue;
+          if (search != "" && plan.name.indexOf(search) == -1 && String(plan.id).indexOf(search) == -1) continue;
 
           var html = `<tr>
             <td>${plan.id}</td>
@@ -274,6 +292,9 @@ function load_plans() {
             <span id="info_${plan.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '详细'}">
               <i class="mdui-icon material-icons">info_outline</i>
             </span>
+            <span id="sync_${plan.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '同步'}">
+              <i class="mdui-icon material-icons">sync</i>
+            </span>
             <span id="edit_${plan.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '修改'}">
               <i class="mdui-icon material-icons">edit</i>
             </span>
@@ -285,6 +306,10 @@ function load_plans() {
 
           $(`#info_${plan.id}`).on("click", null, plan, function (event) {
             info_plan(event.data);
+          });
+
+          $(`#sync_${plan.id}`).on("click", null, plan.id, function (event) {
+            sync_plan(event.data);
           });
 
           $(`#edit_${plan.id}`).on("click", null, plan.id, function (event) {
@@ -337,7 +362,7 @@ $("#search").keyup(function () {
   for (id in plans) {
     var plan = plans[id]
 
-    if (search != "" && plan.name.indexOf(search) == -1) continue;
+    if (search != "" && plan.name.indexOf(search) == -1 && String(plan.id).indexOf(search) == -1) continue;
 
     var html = `<tr>
       <td>${plan.id}</td>
@@ -355,6 +380,9 @@ $("#search").keyup(function () {
       <span id="info_${plan.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '详细'}">
         <i class="mdui-icon material-icons">info_outline</i>
       </span>
+      <span id="sync_${plan.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '同步'}">
+        <i class="mdui-icon material-icons">sync</i>
+      </span>
       <span id="edit_${plan.id}" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '修改'}">
         <i class="mdui-icon material-icons">edit</i>
       </span>
@@ -366,6 +394,10 @@ $("#search").keyup(function () {
 
     $(`#info_${plan.id}`).on("click", null, plan, function (event) {
       info_plan(event.data);
+    });
+
+    $(`#sync_${plan.id}`).on("click", null, plan.id, function (event) {
+      sync_plan(event.data);
     });
 
     $(`#edit_${plan.id}`).on("click", null, plan.id, function (event) {

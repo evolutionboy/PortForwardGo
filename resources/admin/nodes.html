@@ -7,7 +7,7 @@
   <title>转发管理</title>
   <link rel="stylesheet" href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/mdui/1.0.2/css/mdui.min.css" />
   <link rel="stylesheet" href="/src/global.css" />
-  <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/mdui/1.0.2/js/mdui.min.js"></script>
   <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-d/clipboard.js/2.0.10/clipboard.min.js"></script>
 </head>
@@ -218,6 +218,11 @@
           </li>
 
           <li class="mdui-list-item">
+            隧道模式
+            <div id="info_mode" class="mdui-list-item"></div>
+          </li>
+
+          <li class="mdui-list-item">
             密钥
             <div id="info_secret" class="mdui-list-item"></div>
           </li>
@@ -410,6 +415,17 @@
           </li>
 
           <li class="mdui-list-item">
+            隧道模式
+            <div class="mdui-list-item">
+              <select id="add_mode" class="mdui-select mdui-color-transparent">
+                <option value="1">负载均衡</option>
+                <option value="2">故障转移</option>
+              </select>
+            </div>
+            <small class="mdui-text-color-grey">仅作为隧道出口时有效, 顺序自上而下</small>
+          </li>
+
+          <li class="mdui-list-item">
             倍率
             <div class="mdui-list-item mdui-textfield">
               <input id="add_traffic" class="mdui-textfield-input" type="number" min="0" step="0.01" placeholder="1" />
@@ -487,6 +503,10 @@
                   <input id="add_blocked_path" class="mdui-textfield-input" type="text" placeholder="vpn,v2ray" />
                 </div>
               </li>
+
+              <li class="mdui-list-item mdui-text-color-grey">
+                请参考教程设置
+              </li>
             </ul>
           </li>
 
@@ -507,6 +527,10 @@
                   <i class="mdui-list-item-icon mdui-icon material-icons">add</i>
                 </button>
               </li>
+
+              <li class="mdui-list-item mdui-text-color-grey">
+                提示 此设置为多线机器自选出口 可不填
+              </li>
             </ul>
           </li>
 
@@ -521,48 +545,54 @@
                 <div class="mdui-col-xs-3">内网穿透</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="add_nat_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">HTTP</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="add_http_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">HTTPS</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="add_https_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">Secure 隧道</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="add_secure_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">SecureX 隧道</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="add_securex_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">TLS 隧道</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="add_tls_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-text-color-grey">
@@ -692,6 +722,7 @@
             <div class="mdui-list-item mdui-textfield">
               <input id="add_sni" class="mdui-textfield-input" type="text" placeholder="example.com" />
             </div>
+            <small class="mdui-text-color-grey">请参考教程设置</small>
           </li>
 
           <li class="mdui-list-item">
@@ -766,6 +797,17 @@
               <textarea id="edit_ips" class="mdui-textfield-input" type="text" placeholder="一行一个&#10;使用节点地址请留空"
                 style="min-height: 56px;"></textarea>
             </div>
+          </li>
+
+          <li class="mdui-list-item">
+            隧道模式
+            <div class="mdui-list-item">
+              <select id="edit_mode" class="mdui-select mdui-color-transparent">
+                <option value="1">负载均衡</option>
+                <option value="2">故障转移</option>
+              </select>
+            </div>
+            <small class="mdui-text-color-grey">仅作为隧道出口时有效, 顺序自上而下</small>
           </li>
 
           <li class="mdui-list-item">
@@ -846,6 +888,10 @@
                   <input id="edit_blocked_path" class="mdui-textfield-input" type="text" placeholder="vpn,v2ray" />
                 </div>
               </li>
+
+              <li class="mdui-list-item mdui-text-color-grey">
+                请参考教程设置 修改完需要重启后端
+              </li>
             </ul>
           </li>
 
@@ -866,6 +912,10 @@
                   <i class="mdui-list-item-icon mdui-icon material-icons">add</i>
                 </button>
               </li>
+
+              <li class="mdui-list-item mdui-text-color-grey">
+                提示 此设置为多线机器自选出口 可不填
+              </li>
             </ul>
           </li>
 
@@ -880,52 +930,58 @@
                 <div class="mdui-col-xs-3">内网穿透</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="edit_nat_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">HTTP</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="edit_http_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">HTTPS</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="edit_https_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">Secure 隧道</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="edit_secure_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">SecureX 隧道</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="edit_securex_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-row">
                 <div class="mdui-col-xs-3">TLS 隧道</div>
                 <div class="mdui-list-item mdui-textfield">
                   <input id="edit_tls_port" class="mdui-textfield-input" type="number" min="0" max="65535"
-                    placeholder="0为关闭" />
+                    placeholder="0-65535" />
                 </div>
+                <small class="mdui-text-color-grey">0为关闭 不可与其他端口重复</small>
               </li>
 
               <li class="mdui-list-item mdui-text-color-grey">
-                提示 如果此节点作为隧道入口端, 隧道端口请全部关闭
+                提示 如果此节点作为隧道入口端, 隧道端口请全部关闭, 修改完需要重启后端
               </li>
             </ul>
           </li>
@@ -1051,6 +1107,7 @@
             <div class="mdui-list-item mdui-textfield">
               <input id="edit_sni" class="mdui-textfield-input" type="text" placeholder="example.com" />
             </div>
+            <small class="mdui-text-color-grey">请参考教程设置 修改完需要重启后端</small>
           </li>
 
           <li class="mdui-list-item">
