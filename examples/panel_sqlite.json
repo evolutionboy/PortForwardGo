@@ -1,9 +1,7 @@
 {
     "Web": {
-        "Type": "tcp or unix",
-        "Listen": "TCP_PORT or UNIX_PATH",
-        "Cert": "",
-        "Key": ""
+        "Type": "unix",
+        "Listen": "/var/run/pf.socket"
     },
     "Database": {
         "Type": "sqlite3",

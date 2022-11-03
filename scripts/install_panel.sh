@@ -20,7 +20,6 @@ while [ $# -gt 0 ]; do
         service_name=$2
         shift
         ;;
-
     *)
         echo -e "${Font_Red} Unknown param: $1 ${Font_Suffix}"
         exit
@@ -99,6 +98,50 @@ if [ ! -f "/tmp/examples/panel.json" ]; then
     echo -e "${Font_Red}Decompression failed${Font_Suffix}"
     exit 1
 fi
+
+while [[ "${db}" != "mysql" ]] && [[ "${db}" != "sqlite3" ]]; do
+    read -p "please input database type [mysql, sqlite3]: " db
+done
+
+if [[ "${db}" == "mysql" ]]; then
+    read -p "please input database host (default: localhost): " db_host
+    if [ -z "${db_host}" ]; then
+        db_host="localhoost"
+    fi
+
+    read -p "please input database port (default: 3306): " db_port
+    if [ -z "${db_port}" ]; then
+        db_port="3306"
+    fi
+
+    read -p "please input database user (default: root): " db_user
+    if [ -z "${db_user}" ]; then
+        db_user="root"
+    fi
+
+    while [ -z "${db_pass}" ]; do
+        read -p "please input database password: " db_pass
+    done
+
+    while [ -z "${db_name}" ]; do
+        read -p "please input database name: " db_name
+    done
+
+    cp /tmp/examples/panel_mysql.json /tmp/examples/panel.json
+    sed -i "s#{DB_HOST}#${db_host}#g" /tmp/examples/panel.json
+    sed -i "s#3306#${db_port}#g" /tmp/examples/panel.json
+    sed -i "s#{DB_USER}#${db_user}#g" /tmp/examples/panel.json
+    sed -i "s#{DB_PASS}#${db_pass}#g" /tmp/examples/panel.json
+    sed -i "s#{DB_NAME}#${db_name}#g" /tmp/examples/panel.json
+elif [[ "${db}" == "sqlite3" ]]; then
+    cp /tmp/examples/panel_sqlite.json /tmp/examples/panel.json
+fi
+
+db_host="127.0.0.1"
+db_port="3306"
+db_user=""
+db_pass=""
+db_name=""
 
 mkdir -p ${dir}
 chmod 777 /tmp/PortForwardGoPanel
