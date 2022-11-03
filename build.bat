@@ -21,5 +21,5 @@ git commit -m "v%Version%"
 git push -u origin master
 git tag -a v%Version% -m "release v%Version%"
 git push origin v%Version%
-goreleaser --skip-validate
+goreleaser --skip-validate --timeout 60m
 pause
