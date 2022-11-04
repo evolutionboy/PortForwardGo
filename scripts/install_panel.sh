@@ -101,7 +101,7 @@ done
 if [[ "${db}" == "mysql" ]]; then
     read -p "please input database host (default: localhost): " db_host
     if [ -z "${db_host}" ]; then
-        db_host="localhoost"
+        db_host="localhost"
     fi
 
     read -p "please input database port (default: 3306): " db_port
