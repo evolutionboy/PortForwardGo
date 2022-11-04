@@ -94,11 +94,6 @@ if [ ! -f "/tmp/systemd/PortForwardGoPanel.service" ]; then
     exit 1
 fi
 
-if [ ! -f "/tmp/examples/panel.json" ]; then
-    echo -e "${Font_Red}Decompression failed${Font_Suffix}"
-    exit 1
-fi
-
 while [[ "${db}" != "mysql" ]] && [[ "${db}" != "sqlite3" ]]; do
     read -p "please input database type [mysql, sqlite3]: " db
 done
