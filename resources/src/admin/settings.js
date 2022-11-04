@@ -171,7 +171,7 @@ $("#mgate_save").on("click", function () {
       fee: fee,
       api: api,
       app_id: app_id,
-      app_secretkey: app_secret,
+      app_secret: app_secret,
     }),
   })
     .done(function (response) {
