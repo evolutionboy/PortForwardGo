@@ -29,7 +29,7 @@ VALUES
     NULL,
     'admin',
     'Admin',
-    MD5('admin'),
+    '21232f297a57a5a743894a0e4a801fc3',
     '0',
     '0',
     '0000-00-00',
