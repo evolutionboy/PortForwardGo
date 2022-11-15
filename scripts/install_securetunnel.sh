@@ -111,7 +111,7 @@ while [ -d "${dir}" ]; do
 done
 
 echo -e "${Font_Yellow} ** Checking release info...${Font_Suffix}"
-vers=$(curl -sL https://github.com/evolutionboy/PortForwardGo/releases | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | sed 's/\"//g;s/,//g;s/ //g' | awk -F "v" '{print $2}')
+vers=$(curl -sL https://github.com/evolutionboy/PortForwardGo/releases | grep "Tags" | head -n 1 | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | sed 's/\"//g;s/,//g;s/ //g' | awk -F "v" '{print $2}')
 if [ -z "${vers}" ]; then
     echo -e "${Font_Red}Unable to get releases info${Font_Suffix}"
     exit 1
