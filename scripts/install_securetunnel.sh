@@ -111,7 +111,7 @@ while [ -d "${dir}" ]; do
 done
 
 echo -e "${Font_Yellow} ** Checking release info...${Font_Suffix}"
-vers=$(curl -sL https://gitlab.com/api/v4/projects/CoiaPrant%2FPortForwardGo/releases | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | sed 's/\"//g;s/,//g;s/ //g' | awk -F "v" '{print $2}')
+vers=$(curl -sL https://github.com/evolutionboy/PortForwardGo/releases | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | awk -F "," '{print $1}' | sed 's/\"//g;s/,//g;s/ //g' | awk -F "v" '{print $2}')
 if [ -z "${vers}" ]; then
     echo -e "${Font_Red}Unable to get releases info${Font_Suffix}"
     exit 1
@@ -120,7 +120,7 @@ echo -e " Detected lastet version: " ${vers}
 
 echo -e "${Font_Yellow} ** Download release info...${Font_Suffix}"
 
-curl -L -o /tmp/SecureTunnel.tar.gz "https://gitlab.com/CoiaPrant/PortForwardGo/-/releases/v"${vers}"/downloads/SecureTunnel_"${vers}"_linux_"${arch}".tar.gz"
+curl -L -o /tmp/SecureTunnel.tar.gz "https://github.com/evolutionboy/PortForwardGo/-/releases/downloads/"${vers}"/SecureTunnel_"${vers}"_linux_"${arch}".tar.gz"
 if [ ! -f "/tmp/SecureTunnel.tar.gz" ]; then
     echo -e "${Font_Red}Download failed${Font_Suffix}"
     exit 1
